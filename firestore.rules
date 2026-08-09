@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAllowedSite(value) {
+      return value in ['govbr', 'mercadolivre', 'equipe'];
+    }
+
+    function validControl(data) {
+      return data.keys().hasAll([
+          'sessionId', 'voteStatus', 'resultsVisible', 'lighthouseVisible', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'sessionId', 'voteStatus', 'resultsVisible', 'lighthouseVisible', 'updatedAt'
+        ]) &&
+        data.sessionId is string &&
+        data.sessionId.size() >= 1 &&
+        data.sessionId.size() <= 80 &&
+        data.voteStatus in ['closed', 'open', 'ended'] &&
+        data.resultsVisible is bool &&
+        data.lighthouseVisible is bool &&
+        (!data.resultsVisible || data.voteStatus == 'ended') &&
+        (!data.lighthouseVisible || data.resultsVisible) &&
+        data.updatedAt is timestamp;
+    }
+
+    function validVote(data) {
+      return data.keys().hasAll(['name', 'bestSite', 'worstSite', 'createdAt']) &&
+        data.keys().hasOnly(['name', 'bestSite', 'worstSite', 'createdAt']) &&
+        data.name is string &&
+        data.name.size() >= 1 &&
+        data.name.size() <= 40 &&
+        isAllowedSite(data.bestSite) &&
+        isAllowedSite(data.worstSite) &&
+        data.bestSite != data.worstSite &&
+        data.createdAt == request.time;
+    }
+
+    match /presentation/control {
+      allow read: if true;
+
+      // Sem Firebase Authentication, a rota administrativa é apenas uma barreira casual.
+      // Para uma aplicação pública real, substitua por uma regra baseada em usuário autenticado.
+      allow create, update: if validControl(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /sessions/{sessionId}/votes/{deviceId} {
+      allow read: if true;
+      allow create: if deviceId.size() >= 16 &&
+        deviceId.size() <= 80 &&
+        exists(/databases/$(database)/documents/presentation/control) &&
+        get(/databases/$(database)/documents/presentation/control).data.sessionId == sessionId &&
+        get(/databases/$(database)/documents/presentation/control).data.voteStatus == 'open' &&
+        validVote(request.resource.data);
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
