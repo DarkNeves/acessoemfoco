@@ -95,7 +95,7 @@ A abertura usa `img/animacao.svg` em tela cheia por aproximadamente três segund
 2. Em **Configurações do projeto > Seus aplicativos**, registre um aplicativo Web.
 3. Ative o **Cloud Firestore**.
 4. Copie o objeto de configuração pública do aplicativo para `FIREBASE_CONFIG` em `js/firebase-config.js`.
-5. Substitua `SEU_FIREBASE_PROJECT_ID` em `.firebaserc` pelo ID real do projeto.
+5. Confirme que `.firebaserc` aponta para o projeto `farol-da-acessibilidade`.
 6. Instale e autentique a Firebase CLI:
 
 ```bash

@@ -3,50 +3,38 @@
     "public": ".",
     "ignore": [
       "firebase.json",
-      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
       "firestore.rules",
       "firestore.indexes.json",
       "README.md",
       "package.json",
-      "scripts/**",
-      ".github/**",
-      ".git/**",
-      "node_modules/**"
+      "package-lock.json",
+      "scripts/**"
     ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
       }
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(css|js|json|svg|png|jpg|jpeg|webp)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public,max-age=3600"
-          }
-        ]
-      },
-      {
-        "source": "**/*.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache"
-          }
-        ]
-      }
     ]
   },
   "firestore": {
+    "database": "(default)",
+    "location": "southamerica-east1",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
   "emulators": {
-    "hosting": { "port": 5000 },
-    "firestore": { "port": 8080 },
-    "ui": { "enabled": true, "port": 4000 }
+    "hosting": {
+      "port": 5000
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
   }
 }

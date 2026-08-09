@@ -1,16 +1,19 @@
 export const FIREBASE_CONFIG = {
-  apiKey: "SEU_FIREBASE_API_KEY",
-  authDomain: "SEU_FIREBASE_PROJECT_ID.firebaseapp.com",
-  projectId: "SEU_FIREBASE_PROJECT_ID",
-  storageBucket: "SEU_FIREBASE_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-  appId: "SEU_FIREBASE_APP_ID",
+  apiKey: "AIzaSyAciupCRpG7eXcjf67P6LPrjnDKgPFHlxk",
+  authDomain: "farol-da-acessibilidade.firebaseapp.com",
+  projectId: "farol-da-acessibilidade",
+  storageBucket: "farol-da-acessibilidade.firebasestorage.app",
+  messagingSenderId: "608135377557",
+  appId: "1:608135377557:web:e1677df9aae25ed925a19c",
+  measurementId: "G-0Y4QN0CQQF"
 };
 
 const SDK_VERSION = "12.16.0";
+const REQUIRED_CONFIG_FIELDS = ["apiKey", "authDomain", "projectId", "storageBucket", "messagingSenderId", "appId"];
 
 export const isFirebaseConfigured = () =>
-  Object.values(FIREBASE_CONFIG).every((value) => value && !value.startsWith("SEU_"));
+  FIREBASE_CONFIG.projectId === "farol-da-acessibilidade" &&
+  REQUIRED_CONFIG_FIELDS.every((field) => typeof FIREBASE_CONFIG[field] === "string" && FIREBASE_CONFIG[field].trim());
 
 export async function connectFirebase() {
   if (!isFirebaseConfigured()) return null;
@@ -28,4 +31,3 @@ export async function connectFirebase() {
     return null;
   }
 }
-
