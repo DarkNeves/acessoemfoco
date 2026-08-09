@@ -10,6 +10,21 @@
   <meta name="theme-color" content="#176b3a">
   <title>Farol da Acessibilidade</title>
   <script>
+    const normalizedPath = location.pathname.replace(/\/+$/, "") || "/";
+    if (normalizedPath === "/admisrael98839") {
+      document.documentElement.classList.add("admin-route", "admin-auth-pending");
+      window.addEventListener("DOMContentLoaded", () => {
+        window.setTimeout(() => {
+          if (!document.documentElement.classList.contains("admin-auth-pending")) return;
+          const loading = document.querySelector("[data-admin-loading]");
+          const login = document.querySelector("[data-admin-login]");
+          if (!loading || !login) return;
+          loading.hidden = true;
+          login.hidden = false;
+          document.querySelector("#admin-email")?.focus();
+        }, 3000);
+      }, { once: true });
+    }
     try {
       const savedLanguage = localStorage.getItem("farolLanguage");
       if (savedLanguage === "en" || savedLanguage === "es") document.documentElement.classList.add("i18n-pending");
@@ -20,16 +35,16 @@
   </script>
   <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./libs/lenis/lenis.css">
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/style.css?v=7">
   <script src="./libs/lenis/lenis.min.js" defer></script>
-  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/main.js?v=6"></script>
 </head>
 
 <body id="topo">
   <div class="splash-screen" id="splash-screen" aria-hidden="true">
     <img class="splash-animation" src="./img/animacao.svg" width="500" height="500" alt="">
   </div>
-  <a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo principal</a>
+  <a class="pular-conteudo" href="#main-content">Pular para o conteúdo principal</a>
 
   <header class="site-header">
     <div class="container header-inner">
@@ -163,7 +178,47 @@
     </div>
   </header>
 
-  <main id="conteudo-principal" tabindex="-1">
+  <main id="main-content" tabindex="-1">
+    <div class="admin-access" id="admin-access">
+      <div class="admin-access-card">
+        <div class="admin-access-brand" aria-hidden="true">
+          <img src="./img/logo-ifrr.png" width="132" height="175" alt="">
+        </div>
+
+        <div data-admin-loading role="status" aria-live="polite">
+          <p class="eyebrow">Farol da Acessibilidade</p>
+          <h1 id="admin-access-title">Verificando acesso…</h1>
+          <span class="admin-access-spinner" aria-hidden="true"></span>
+        </div>
+
+        <form class="admin-login-form" data-admin-login hidden novalidate>
+          <p class="eyebrow">Farol da Acessibilidade</p>
+          <h1>Acesso administrativo</h1>
+          <p class="admin-access-note">Área restrita.</p>
+
+          <div class="field-group">
+            <label for="admin-email">E-mail</label>
+            <input id="admin-email" name="email" type="email" autocomplete="username" required>
+          </div>
+
+          <div class="field-group">
+            <label for="admin-password">Senha</label>
+            <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+          </div>
+
+          <p class="form-feedback admin-login-feedback" data-admin-login-feedback role="alert" aria-live="assertive"></p>
+          <button class="button button-primary button-wide" type="submit">Entrar</button>
+        </form>
+
+        <div data-admin-denied hidden>
+          <p class="eyebrow">Farol da Acessibilidade</p>
+          <h1>Acesso não autorizado.</h1>
+          <p class="admin-access-note">Esta conta não possui permissão administrativa.</p>
+          <button class="button button-secondary button-wide" type="button" data-admin-signout>Sair</button>
+        </div>
+      </div>
+    </div>
+
     <section class="hero" aria-labelledby="titulo-principal">
       <div class="container hero-grid">
         <div class="hero-copy reveal">

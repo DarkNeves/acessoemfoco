@@ -1,10 +1,11 @@
-import { connectFirebase } from "./firebase-config.js";
+import { isAdminRoute, setupAdminAccess } from "./admin-auth.js?v=3";
+import { connectFirebase } from "./firebase-config.js?v=3";
 import { mountHeroVisual } from "./hero-visuals.js";
 import { onLanguageChange, setupI18n, t } from "./i18n.js";
-import { loadLighthouseData, renderExternalLinks } from "./lighthouse.js";
+import { loadLighthouseData, renderExternalLinks } from "./lighthouse.js?v=4";
 import { closeAccessibilitySettings, setupAccessibilitySettings } from "./settings.js";
-import { setupSplashScreen } from "./splash.js";
-import { setupVoting } from "./voting.js";
+import { setupSplashScreen } from "./splash.js?v=6";
+import { setupVoting } from "./voting.js?v=3";
 
 function setupSmoothScrolling() {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -119,6 +120,20 @@ async function initialize() {
   setupScrollEffects();
   renderExternalLinks();
   onLanguageChange(renderExternalLinks);
+
+  const adminRoute = isAdminRoute();
+  if (adminRoute) {
+    const firebase = await connectFirebase({ includeAuth: true });
+    await setupAdminAccess(firebase, async () => {
+      try {
+        await loadLighthouseData();
+      } catch (error) {
+        console.error(error);
+      }
+      await setupVoting(firebase);
+    });
+    return;
+  }
 
   try {
     await loadLighthouseData();

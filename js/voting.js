@@ -17,6 +17,9 @@ const defaultControl = {
   lighthouseVisible: false,
 };
 
+const emptyCounts = () => Object.fromEntries(Object.keys(SITE_NAMES).map((id) => [id, 0]));
+const emptySummary = () => ({ total: 0, best: emptyCounts(), worst: emptyCounts() });
+
 const elements = {
   form: document.querySelector("#vote-form"),
   notice: document.querySelector("#vote-notice"),
@@ -37,10 +40,12 @@ const state = {
   firebase: null,
   control: { ...defaultControl },
   votes: [],
+  summary: emptySummary(),
   isAdmin: normalizePath(location.pathname) === ADMIN_PATH,
   unavailable: false,
   submitting: false,
   votesUnsubscribe: null,
+  summaryUnsubscribe: null,
   controlUnsubscribe: null,
   officialAnimated: false,
 };
@@ -130,6 +135,7 @@ function updateStatusPresentation() {
   };
   elements.statusLabel.textContent = t(labels[voteStatus] ?? "Aguardando configuração");
   elements.statusDot.classList.add(voteStatus === "open" ? "open" : voteStatus === "ended" ? "ended" : "closed");
+  elements.statusDot.classList.toggle("is-live", voteStatus === "open");
 }
 
 function updateVotingForm() {
@@ -169,11 +175,8 @@ function updateVotingForm() {
 
 function renderBars(container, field) {
   container.replaceChildren();
-  const total = state.votes.length;
-  const counts = Object.fromEntries(Object.keys(SITE_NAMES).map((id) => [id, 0]));
-  state.votes.forEach((vote) => {
-    if (Object.hasOwn(counts, vote[field])) counts[vote[field]] += 1;
-  });
+  const total = state.summary.total;
+  const counts = field === "bestSite" ? state.summary.best : state.summary.worst;
 
   Object.entries(SITE_NAMES).forEach(([id, nameSource]) => {
     const name = siteName(id);
@@ -287,10 +290,14 @@ function updateAdminPanel() {
   if (!panel) return;
 
   const { voteStatus, resultsVisible, lighthouseVisible } = state.control;
+  const statusDot = panel.querySelector("[data-admin-status-dot]");
+  statusDot.className = "status-dot";
+  statusDot.classList.add(state.unavailable ? "closed" : voteStatus === "open" ? "open" : voteStatus === "ended" ? "ended" : "closed");
+  statusDot.classList.toggle("is-live", !state.unavailable && voteStatus === "open");
   panel.querySelector("[data-admin-status]").textContent = state.unavailable
     ? t("Firebase não configurado")
-    : voteStatus === "open" ? `🟢 ${t("Votação aberta")}` : voteStatus === "ended" ? `🔒 ${t("Votação encerrada")}` : `🔴 ${t("Votação fechada")}`;
-  panel.querySelector("[data-admin-count]").textContent = pluralizeVotes(state.votes.length);
+    : voteStatus === "open" ? t("Votação aberta") : voteStatus === "ended" ? t("Votação encerrada") : t("Votação fechada");
+  panel.querySelector("[data-admin-count]").textContent = pluralizeVotes(state.summary.total);
   panel.querySelector("[data-admin-session]").textContent = state.control.sessionId || "—";
 
   const action = (name) => panel.querySelector(`[data-admin-action="${name}"]`);
@@ -302,7 +309,7 @@ function updateAdminPanel() {
 }
 
 function updateInterface() {
-  elements.counter.textContent = pluralizeVotes(state.votes.length);
+  elements.counter.textContent = pluralizeVotes(state.summary.total);
   updateStatusPresentation();
   updateVotingForm();
   updateRevealSections();
@@ -344,15 +351,9 @@ async function submitVote(event) {
   submitButton.textContent = t("Registrando…");
 
   try {
-    const { db, doc, getDoc, setDoc, serverTimestamp } = state.firebase;
+    const { db, doc, setDoc, serverTimestamp } = state.firebase;
     const deviceId = getDeviceId();
     const voteReference = doc(db, "sessions", state.control.sessionId, "votes", deviceId);
-    const existingVote = await getDoc(voteReference);
-    if (existingVote.exists()) {
-      markAsVoted(state.control.sessionId);
-      throw new Error("duplicate-vote");
-    }
-
     await setDoc(voteReference, { name, bestSite, worstSite, createdAt: serverTimestamp() });
     markAsVoted(state.control.sessionId);
     elements.form.reset();
@@ -379,16 +380,59 @@ async function submitVote(event) {
 function subscribeToVotes(sessionId) {
   state.votesUnsubscribe?.();
   state.votes = [];
+  state.summary = emptySummary();
   if (!sessionId) return;
 
   const { db, collection, onSnapshot } = state.firebase;
   const votesReference = collection(db, "sessions", sessionId, "votes");
   state.votesUnsubscribe = onSnapshot(votesReference, (snapshot) => {
     state.votes = snapshot.docs.map((vote) => vote.data());
+    state.summary = summarizeVotes(state.votes);
     updateInterface();
+    publishSummary(sessionId, state.summary);
   }, (error) => {
     console.error("Erro ao acompanhar votos:", error);
     toast(t("A contagem ao vivo foi interrompida. Verifique a conexão."), "error");
+  });
+}
+
+function summarizeVotes(votes) {
+  const summary = emptySummary();
+  summary.total = votes.length;
+  votes.forEach((vote) => {
+    if (Object.hasOwn(summary.best, vote.bestSite)) summary.best[vote.bestSite] += 1;
+    if (Object.hasOwn(summary.worst, vote.worstSite)) summary.worst[vote.worstSite] += 1;
+  });
+  return summary;
+}
+
+async function publishSummary(sessionId, summary) {
+  const { db, doc, setDoc, serverTimestamp } = state.firebase;
+  try {
+    await setDoc(doc(db, "sessions", sessionId, "public", "summary"), {
+      ...summary,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("Erro ao publicar o resumo da votação:", error);
+    toast(t("A contagem ao vivo foi interrompida. Verifique a conexão."), "error");
+  }
+}
+
+function subscribeToSummary(sessionId) {
+  state.summaryUnsubscribe?.();
+  state.summary = emptySummary();
+  if (!sessionId) return;
+
+  const { db, doc, onSnapshot } = state.firebase;
+  const summaryReference = doc(db, "sessions", sessionId, "public", "summary");
+  state.summaryUnsubscribe = onSnapshot(summaryReference, (snapshot) => {
+    state.summary = snapshot.exists() ? { ...emptySummary(), ...snapshot.data() } : emptySummary();
+    updateInterface();
+  }, (error) => {
+    console.error("Erro ao acompanhar o resumo da votação:", error);
+    state.summary = emptySummary();
+    updateInterface();
   });
 }
 
@@ -408,10 +452,9 @@ function buildAdminPanel() {
   section.className = "admin-panel";
   section.setAttribute("aria-labelledby", "admin-title");
   section.innerHTML = `
-    <header><div><p class="eyebrow">Somente no modo apresentador</p><h3 id="admin-title">Controle da dinâmica</h3></div></header>
-    <p class="admin-warning">Esta rota oculta evita acesso casual, mas não é autenticação de produção.</p>
+    <header><div><p class="eyebrow">Somente no modo apresentador</p><h3 id="admin-title">Controle da dinâmica</h3></div><button class="button button-admin admin-signout" type="button" data-admin-signout>Sair</button></header>
     <div class="admin-stats">
-      <div><small>Status</small><strong data-admin-status>Carregando…</strong></div>
+      <div><small>Status</small><strong class="admin-status"><span class="status-dot closed" data-admin-status-dot aria-hidden="true"></span><span data-admin-status>Carregando…</span></strong></div>
       <div><small>Contagem</small><strong data-admin-count>0 votos</strong></div>
       <div><small>Sessão atual</small><strong data-admin-session>—</strong></div>
     </div>
@@ -466,8 +509,11 @@ function subscribeToControl() {
     }
     const previousSession = state.control.sessionId;
     state.control = { ...defaultControl, ...snapshot.data() };
-    if (state.control.sessionId !== previousSession || !state.votesUnsubscribe) {
-      subscribeToVotes(state.control.sessionId);
+    const sessionChanged = state.control.sessionId !== previousSession;
+    const subscriptionMissing = state.isAdmin ? !state.votesUnsubscribe : !state.summaryUnsubscribe;
+    if (sessionChanged || subscriptionMissing) {
+      if (state.isAdmin) subscribeToVotes(state.control.sessionId);
+      else subscribeToSummary(state.control.sessionId);
     }
     updateInterface();
   }, (error) => {

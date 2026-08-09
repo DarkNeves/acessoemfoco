@@ -1,4 +1,4 @@
-import { LINKS } from "./config.js";
+import { LINKS } from "./config.js?v=4";
 import { onLanguageChange, t } from "./i18n.js";
 
 const DATA_URL = "/data/lighthouse-results.json";
