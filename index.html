@@ -17,7 +17,7 @@
   </script>
   <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./libs/lenis/lenis.css">
-  <link rel="stylesheet" href="./css/style.css?v=20">
+  <link rel="stylesheet" href="./css/style.css?v=21">
   <script src="./libs/lenis/lenis.min.js" defer></script>
   <script type="module" src="./js/main.js?v=9"></script>
 </head>
@@ -266,32 +266,84 @@
         <div class="container">
           <div class="app-section-heading reveal">
             <div class="app-icon-placeholder" aria-hidden="true">S</div>
-            <div><p class="eyebrow">Aplicativo analisado</p><h2 id="aplicativo-02-titulo">Aplicativo 02 - SHEIN</h2><p>A tela inicial da SHEIN foi inspecionada com o Scanner de Acessibilidade para identificar barreiras de contraste.</p></div>
+            <div><p class="eyebrow">Aplicativo analisado</p><h2 id="aplicativo-02-titulo">Aplicativo 02 - SHEIN</h2><p>A tela inicial da SHEIN foi inspecionada com o Scanner de Acessibilidade para identificar barreiras de interação, descrição e adaptação do texto.</p></div>
           </div>
           <div class="app-case-list">
             <article class="app-case reveal" id="shein-bug-01" aria-labelledby="shein-bug-01-titulo">
               <header class="app-case-heading">
-                <p class="case-label"><span>BUG 01</span> Contraste do texto</p>
-                <h3 id="shein-bug-01-titulo">Contraste insuficiente em texto sobre fundo vermelho</h3>
-                <p>O scanner identificou texto sobre fundo colorido abaixo da relação recomendada para textos pequenos.</p>
+                <p class="case-label"><span>BUG 01</span> Áreas de toque pequenas</p>
+                <h3 id="shein-bug-01-titulo">Elementos clicáveis menores que a área recomendada</h3>
+                <p>O scanner identificou controles interativos com largura ou altura inferior a 48dp.</p>
               </header>
               <figure class="case-evidence-group">
                 <div class="app-analysis-layout case-study-layout">
                   <div class="screenshot-card evidence-card">
-                    <div class="phone-frame evidence-frame"><img src="./bugs/shein/screen1.png" width="1080" height="2340" loading="lazy" alt="Tela inicial da SHEIN com diversos elementos contornados em laranja pelo Scanner de Acessibilidade. O achado apresentado corresponde a texto branco sobre fundo vermelho, cuja relação de contraste foi medida em 3,58:1."></div>
+                    <div class="phone-frame evidence-frame"><div class="evidence-image-wrap shein-evidence shein-evidence-touch"><img src="./bugs/shein/screen1.png" width="1080" height="2340" loading="lazy" alt="Tela inicial da SHEIN analisada pelo Scanner de Acessibilidade. Os controles clicáveis da barra superior e das categorias estão contornados; entre os alvos pequenos identificados há controles de 36dp por 40dp e categorias com cerca de 38dp de altura."><span class="evidence-marker marker-touch-controls" aria-hidden="true"></span><span class="evidence-marker marker-touch-categories" aria-hidden="true"></span></div></div>
                   </div>
                   <div class="case-analysis">
-                    <dl class="metric-comparison" aria-label="Comparação entre o contraste detectado e o recomendado para textos pequenos">
-                      <div class="metric-detected"><dt>Detectado</dt><dd>3,58<small>:1</small></dd></div>
-                      <div class="metric-recommended"><dt>Recomendado</dt><dd>&gt; 4,50<small>:1</small></dd></div>
+                    <dl class="metric-comparison" aria-label="Comparação entre o tamanho detectado e a área de toque recomendada">
+                      <div class="metric-detected"><dt>Detectado</dt><dd>36 × 40<small>dp</small></dd></div>
+                      <div class="metric-recommended"><dt>Recomendado</dt><dd>≥ 48<small>dp</small></dd></div>
                     </dl>
-                    <section class="issue-card finding-card finding-problem" aria-labelledby="shein-bug-01-achado"><span class="issue-number">ACHADO DO SCANNER</span><h4 id="shein-bug-01-achado">Problema encontrado</h4><p>O relatório registrou contraste de 3,58:1 entre texto branco <span class="color-value">#FFFFFF</span> e fundo vermelho <span class="color-value">#FE3A30</span>.</p></section>
-                    <section class="issue-card finding-card impact-card" aria-labelledby="shein-bug-01-impacto"><span class="issue-number">IMPACTO</span><h4 id="shein-bug-01-impacto">Impacto na acessibilidade</h4><p>O baixo contraste pode dificultar a leitura para pessoas com baixa visão ou sensibilidade reduzida a diferenças de cor.</p></section>
-                    <section class="issue-card finding-card finding-recommendation" aria-labelledby="shein-bug-01-recomendacao"><span class="issue-number">RECOMENDAÇÃO DO SCANNER</span><h4 id="shein-bug-01-recomendacao">O que a ferramenta orienta</h4><p>Aumentar a relação de contraste para 4,50:1 ou mais quando o conteúdo for apresentado como texto pequeno.</p></section>
-                    <section class="issue-card finding-card finding-solution" aria-labelledby="shein-bug-01-solucao"><span class="issue-number">PROPOSTA DA EQUIPE</span><h4 id="shein-bug-01-solucao">Solução sugerida</h4><p>Ajustar a cor do texto ou do fundo vermelho e validar novamente a combinação até alcançar o contraste mínimo recomendado.</p></section>
+                    <section class="issue-card finding-card finding-problem" aria-labelledby="shein-bug-01-achado"><span class="issue-number">ACHADO DO SCANNER</span><h4 id="shein-bug-01-achado">Problema encontrado</h4><p>O scanner detectou elementos clicáveis abaixo do tamanho recomendado. O relatório registra alvos de 36dp × 40dp, 32dp × 36dp e 44dp × 28dp, além de controles de categoria com aproximadamente 38dp de altura.</p></section>
+                    <section class="issue-card finding-card impact-card" aria-labelledby="shein-bug-01-impacto"><span class="issue-number">IMPACTO</span><h4 id="shein-bug-01-impacto">Impacto na acessibilidade</h4><p>Alvos pequenos podem dificultar a seleção precisa, especialmente para pessoas com precisão motora reduzida, tremores ou outras limitações motoras.</p></section>
+                    <section class="issue-card finding-card finding-recommendation" aria-labelledby="shein-bug-01-recomendacao"><span class="issue-number">RECOMENDAÇÃO DO SCANNER</span><h4 id="shein-bug-01-recomendacao">O que a ferramenta orienta</h4><p>Aumentar a dimensão afetada da área de toque para 48dp ou mais.</p></section>
+                    <section class="issue-card finding-card finding-solution" aria-labelledby="shein-bug-01-solucao"><span class="issue-number">PROPOSTA DA EQUIPE</span><h4 id="shein-bug-01-solucao">Solução sugerida</h4><p>Ampliar a área interativa efetiva dos controles sem aumentar desnecessariamente sua aparência visual.</p></section>
                   </div>
                 </div>
-                <figcaption class="evidence-summary-card"><strong>Evidência - contraste de 3,58:1</strong><span>O scanner registrou contraste insuficiente no texto branco sobre fundo vermelho.</span><button class="preview-button evidence-preview-button" type="button" data-preview-src="./bugs/shein/screen1.png" aria-label="Ampliar evidência do Bug 01 da SHEIN">Ampliar evidência</button></figcaption>
+                <figcaption class="evidence-summary-card"><strong>Evidência - alvos menores que 48dp</strong><span>Os destaques reforçam os controles superiores e as categorias que apresentam dimensões reduzidas no relatório.</span><button class="preview-button evidence-preview-button" type="button" data-preview-src="./bugs/shein/screen1.png" aria-label="Ampliar evidência do Bug 01 da SHEIN">Ampliar evidência</button></figcaption>
+              </figure>
+            </article>
+
+            <article class="app-case reveal" id="shein-bug-02" aria-labelledby="shein-bug-02-titulo">
+              <header class="app-case-heading">
+                <p class="case-label"><span>BUG 02</span> Descrições repetidas</p>
+                <h3 id="shein-bug-02-titulo">Descrição falada repetida em itens “Plus Size”</h3>
+                <p>O achado se refere à descrição exposta por itens clicáveis, e não apenas à repetição visual do texto.</p>
+              </header>
+              <figure class="case-evidence-group">
+                <div class="app-analysis-layout case-study-layout">
+                  <div class="screenshot-card evidence-card">
+                    <div class="phone-frame evidence-frame"><div class="evidence-image-wrap shein-evidence shein-evidence-repeat"><img src="./bugs/shein/screen1.png" width="1080" height="2340" loading="lazy" alt="Tela inicial da SHEIN analisada pelo Scanner de Acessibilidade. Dois controles clicáveis com o texto Plus Size aparecem em áreas diferentes da tela e são destacados como apoio visual ao achado de descrições faladas idênticas."><span class="evidence-marker marker-plus-card" aria-hidden="true"></span><span class="evidence-marker marker-plus-category" aria-hidden="true"></span></div></div>
+                  </div>
+                  <div class="case-analysis">
+                    <dl class="metric-comparison labels-comparison" aria-label="Descrição repetida e item identificado pelo scanner">
+                      <div class="metric-detected"><dt>Detectado</dt><dd>Descrição repetida</dd></div>
+                      <div class="metric-recommended"><dt>Item identificado</dt><dd>“Plus Size”</dd></div>
+                    </dl>
+                    <section class="issue-card finding-card finding-problem" aria-labelledby="shein-bug-02-achado"><span class="issue-number">ACHADO DO SCANNER</span><h4 id="shein-bug-02-achado">Problema encontrado</h4><p>O scanner identificou mais de um item clicável com a mesma descrição falada. O texto “Plus Size” é utilizado de forma idêntica em outro item da tela.</p></section>
+                    <section class="issue-card finding-card impact-card" aria-labelledby="shein-bug-02-impacto"><span class="issue-number">IMPACTO</span><h4 id="shein-bug-02-impacto">Impacto na acessibilidade</h4><p>Quando elementos interativos diferentes expõem descrições faladas idênticas, uma pessoa que usa leitor de tela pode ter dificuldade para distinguir o propósito ou o contexto de cada controle.</p></section>
+                    <section class="issue-card finding-card finding-recommendation" aria-labelledby="shein-bug-02-registro"><span class="issue-number">REGISTRO DO SCANNER</span><h4 id="shein-bug-02-registro">Orientação disponível no relatório</h4><p>O relatório registra que vários itens têm a mesma descrição e que o texto falado “Plus Size” é idêntico ao de outro item. Não apresenta uma instrução de correção separada para esse achado.</p></section>
+                    <section class="issue-card finding-card finding-solution" aria-labelledby="shein-bug-02-solucao"><span class="issue-number">PROPOSTA DA EQUIPE</span><h4 id="shein-bug-02-solucao">Solução sugerida</h4><p>Fornecer rótulos de acessibilidade contextualizados que descrevam o propósito de cada controle, como categoria ou acesso à coleção, de acordo com a ação realmente executada.</p></section>
+                  </div>
+                </div>
+                <figcaption class="evidence-summary-card"><strong>Evidência - descrição “Plus Size” repetida</strong><span>A captura mostra duas ocorrências em contextos diferentes; o scanner confirma que itens clicáveis compartilham a mesma descrição falada.</span><button class="preview-button evidence-preview-button" type="button" data-preview-src="./bugs/shein/screen1.png" aria-label="Ampliar evidência do Bug 02 da SHEIN">Ampliar evidência</button></figcaption>
+              </figure>
+            </article>
+
+            <article class="app-case reveal" id="shein-bug-03" aria-labelledby="shein-bug-03-titulo">
+              <header class="app-case-heading">
+                <p class="case-label"><span>BUG 03</span> Texto e componentes com dimensões fixas</p>
+                <h3 id="shein-bug-03-titulo">Contêineres podem limitar a expansão do texto</h3>
+                <p>O scanner encontrou elementos de texto e grupos com dimensões fixas que podem não acompanhar o aumento da fonte.</p>
+              </header>
+              <figure class="case-evidence-group">
+                <div class="app-analysis-layout case-study-layout">
+                  <div class="screenshot-card evidence-card">
+                    <div class="phone-frame evidence-frame"><div class="evidence-image-wrap shein-evidence shein-evidence-fixed"><img src="./bugs/shein/screen1.png" width="1080" height="2340" loading="lazy" alt="Tela inicial da SHEIN analisada pelo Scanner de Acessibilidade. A faixa horizontal de categorias, com textos como Masculino, Envio Nacional, Feminino e Esporte, é destacada como região com contêineres de largura fixa que podem limitar a expansão do texto."><span class="evidence-marker marker-fixed-categories" aria-hidden="true"></span></div></div>
+                  </div>
+                  <div class="case-analysis">
+                    <dl class="metric-comparison labels-comparison" aria-label="Comportamento detectado e comportamento recomendado para expansão do texto">
+                      <div class="metric-detected"><dt>Detectado</dt><dd>Dimensão fixa</dd></div>
+                      <div class="metric-recommended"><dt>Recomendado</dt><dd>Layout adaptável</dd></div>
+                    </dl>
+                    <section class="issue-card finding-card finding-problem" aria-labelledby="shein-bug-03-achado"><span class="issue-number">ACHADO DO SCANNER</span><h4 id="shein-bug-03-achado">Problema encontrado</h4><p>O scanner identificou componentes de texto e contêineres com dimensões fixas, o que pode limitar a expansão do conteúdo quando o tamanho da fonte é aumentado.</p></section>
+                    <section class="issue-card finding-card impact-card" aria-labelledby="shein-bug-03-impacto"><span class="issue-number">IMPACTO</span><h4 id="shein-bug-03-impacto">Impacto na acessibilidade</h4><p>Pessoas que usam fontes maiores no sistema podem encontrar textos cortados, rótulos truncados, sobreposição ou perda de informação quando os contêineres não acompanham o conteúdo ampliado.</p></section>
+                    <section class="issue-card finding-card finding-recommendation" aria-labelledby="shein-bug-03-recomendacao"><span class="issue-number">RECOMENDAÇÃO DO SCANNER</span><h4 id="shein-bug-03-recomendacao">O que a ferramenta orienta</h4><p>Modificar os <span class="technical-value">LayoutParams</span> para permitir a expansão do texto.</p></section>
+                    <section class="issue-card finding-card finding-solution" aria-labelledby="shein-bug-03-solucao"><span class="issue-number">PROPOSTA DA EQUIPE</span><h4 id="shein-bug-03-solucao">Solução sugerida</h4><p>Evitar dimensões rígidas nos contêineres de texto, permitir que os componentes cresçam com o conteúdo e a escala de fonte do sistema e verificar a interface com tamanhos de fonte maiores no Android.</p></section>
+                  </div>
+                </div>
+                <figcaption class="evidence-summary-card"><strong>Evidência - contêineres de texto com largura fixa</strong><span>O destaque identifica a faixa de categorias associada no relatório a grupos que podem limitar a expansão do texto.</span><button class="preview-button evidence-preview-button" type="button" data-preview-src="./bugs/shein/screen1.png" aria-label="Ampliar evidência do Bug 03 da SHEIN">Ampliar evidência</button></figcaption>
               </figure>
             </article>
           </div>
@@ -392,7 +444,7 @@
         <div class="section-heading center reveal"><p class="eyebrow">Síntese da análise</p><h2 id="problemas-titulo">Achados nos três aplicativos</h2><p>Uma visão geral das barreiras confirmadas nos relatórios do Scanner de Acessibilidade.</p></div>
         <div class="issue-grid summary-grid">
           <article class="issue-card summary-card reveal"><span class="issue-number">UBER</span><h3>Interação e compreensão</h3><p>Foram registrados problemas de área de toque, contraste do texto e descrições de acessibilidade repetidas.</p><a href="#uber-bug-01">Ver estudos da Uber <span aria-hidden="true">↑</span></a></article>
-          <article class="issue-card summary-card reveal"><span class="issue-number">SHEIN</span><h3>Contraste do texto</h3><p>O texto branco analisado sobre fundo vermelho apresentou contraste de 3,58:1, abaixo dos 4,50:1 indicados pela ferramenta.</p><a href="#shein-bug-01">Ver estudo da SHEIN <span aria-hidden="true">↑</span></a></article>
+          <article class="issue-card summary-card reveal"><span class="issue-number">SHEIN</span><h3>Interação, descrição e adaptação</h3><p>Foram registrados alvos de toque pequenos, descrições faladas repetidas e componentes com dimensões fixas que podem limitar a expansão do texto.</p><a href="#shein-bug-01">Ver estudos da SHEIN <span aria-hidden="true">↑</span></a></article>
           <article class="issue-card summary-card reveal"><span class="issue-number">GOOGLE PLAY STORE</span><h3>Conteúdo e interação</h3><p>Foram registrados baixo contraste, conteúdo possivelmente indisponível aos serviços de acessibilidade e itens clicáveis sobrepostos.</p><a href="#google-play-bug-01">Ver estudos da Google Play Store <span aria-hidden="true">↑</span></a></article>
         </div>
       </div>

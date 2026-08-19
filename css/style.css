@@ -478,6 +478,14 @@ code { padding: .08em .25em; border-radius: 4px; background: var(--surface-soft)
 .evidence-card { width: 100%; height: 100%; grid-column: 1; align-self: stretch; }
 .evidence-frame { display: grid; place-items: center; padding: .4rem; }
 .phone-frame.evidence-frame > img { width: min(100%, 235px); height: auto; min-height: 0; aspect-ratio: 1080 / 2340; border: 1px solid color-mix(in srgb, var(--border) 75%, transparent); border-radius: 17px; object-fit: contain; }
+.evidence-image-wrap { position: relative; width: min(100%, 235px); line-height: 0; }
+.evidence-image-wrap > img { display: block; width: 100%; height: auto; aspect-ratio: 1080 / 2340; border: 1px solid color-mix(in srgb, var(--border) 75%, transparent); border-radius: 17px; object-fit: contain; }
+.evidence-marker { position: absolute; border: 3px solid #ff6a00; border-radius: 6px; background: rgb(255 230 0 / 13%); box-shadow: 0 0 0 2px rgb(255 255 255 / 88%), 0 0 0 5px rgb(255 106 0 / 72%); pointer-events: none; }
+.marker-touch-controls { top: 4.8%; left: 21%; width: 68%; height: 5.6%; }
+.marker-touch-categories { top: 10.3%; left: 1%; width: 97.5%; height: 5.3%; }
+.marker-plus-card { top: 35.6%; left: 67.2%; width: 21.2%; height: 18.4%; }
+.marker-plus-category { top: 78.2%; left: 62.2%; width: 20.5%; height: 4.8%; }
+.marker-fixed-categories { top: 10.3%; left: 1%; width: 97.5%; height: 5.3%; }
 .evidence-summary-card { display: grid; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .12rem .9rem; padding: .62rem .78rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 28px rgb(23 35 28 / 7%); }
 .evidence-summary-card strong, .evidence-summary-card span { grid-column: 1; }
 .evidence-summary-card strong { color: var(--text); font-size: .98rem; line-height: 1.3; }
