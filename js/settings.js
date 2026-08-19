@@ -1,4 +1,4 @@
-import { onLanguageChange, t } from "./i18n.js";
+import { onLanguageChange, t } from "./i18n.js?v=5";
 
 const STORAGE_KEY = "farolAccessibilitySettings";
 const PANEL_TRANSITION_DURATION = 340;

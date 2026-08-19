@@ -1,6 +1,6 @@
 import { mountHeroVisual } from "./hero-visuals.js";
-import { setupI18n, t } from "./i18n.js";
-import { closeAccessibilitySettings, setupAccessibilitySettings } from "./settings.js?v=2";
+import { setupI18n, t } from "./i18n.js?v=5";
+import { closeAccessibilitySettings, setupAccessibilitySettings } from "./settings.js?v=6";
 import { setupSplashScreen } from "./splash.js?v=6";
 
 function setupSmoothScrolling() {

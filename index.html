@@ -7,19 +7,24 @@
   <meta name="description" content="Apresentação acadêmica sobre análise de acessibilidade em aplicativos móveis com ferramentas de inspeção de acessibilidade.">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#176b3a">
-  <title>Análise de Acessibilidade em Aplicativos</title>
+  <title>Acesso em Foco - Análise de Acessibilidade</title>
   <script>
     try {
       const savedSettings = JSON.parse(localStorage.getItem("farolAccessibilitySettings") ?? "{}");
       if (savedSettings.theme === "dark") document.documentElement.dataset.theme = "dark";
+      const savedLanguage = localStorage.getItem("farolLanguage");
+      if (["en", "es"].includes(savedLanguage)) {
+        document.documentElement.lang = savedLanguage;
+        document.documentElement.classList.add("i18n-pending");
+      }
     } catch { }
     document.documentElement.classList.add("splash-active");
   </script>
   <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./libs/lenis/lenis.css">
-  <link rel="stylesheet" href="./css/style.css?v=21">
+  <link rel="stylesheet" href="./css/style.css?v=22">
   <script src="./libs/lenis/lenis.min.js" defer></script>
-  <script type="module" src="./js/main.js?v=9"></script>
+  <script type="module" src="./js/main.js?v=14"></script>
 </head>
 
 <body id="topo">
@@ -47,6 +52,18 @@
         </ul>
       </nav>
       <div class="header-tools">
+        <div class="language-picker">
+          <button class="language-toggle" id="language-toggle" type="button" aria-label="Selecionar idioma" aria-haspopup="menu" aria-controls="language-menu" aria-expanded="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"></path></svg>
+            <span id="language-current">PT</span>
+            <svg class="language-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Selecionar idioma" hidden>
+            <button type="button" role="menuitemradio" aria-checked="true" data-language="pt-BR"><small>PT</small><span lang="pt-BR">Português</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg></button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-language="en"><small>EN</small><span lang="en">English</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg></button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-language="es"><small>ES</small><span lang="es">Español</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg></button>
+          </div>
+        </div>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Ativar tema escuro">
           <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path></svg>
           <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
