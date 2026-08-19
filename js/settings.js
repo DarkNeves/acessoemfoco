@@ -4,10 +4,10 @@ const STORAGE_KEY = "farolAccessibilitySettings";
 const PANEL_TRANSITION_DURATION = 340;
 const TEXT_SIZES = ["small", "default", "large", "larger"];
 const TEXT_LABEL_SOURCES = {
-  small: "Reduzido — 90%",
-  default: "Padrão — 100%",
-  large: "Ampliado — 112%",
-  larger: "Ampliado — 125%",
+  small: "Reduzido - 90%",
+  default: "Padrão - 100%",
+  large: "Ampliado - 112%",
+  larger: "Ampliado - 125%",
 };
 
 const defaults = {

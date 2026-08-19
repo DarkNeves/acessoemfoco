@@ -298,7 +298,7 @@ function updateAdminPanel() {
     ? t("Firebase não configurado")
     : voteStatus === "open" ? t("Votação aberta") : voteStatus === "ended" ? t("Votação encerrada") : t("Votação fechada");
   panel.querySelector("[data-admin-count]").textContent = pluralizeVotes(state.summary.total);
-  panel.querySelector("[data-admin-session]").textContent = state.control.sessionId || "—";
+  panel.querySelector("[data-admin-session]").textContent = state.control.sessionId || "-";
 
   const action = (name) => panel.querySelector(`[data-admin-action="${name}"]`);
   action("open").disabled = state.unavailable || voteStatus !== "closed";
@@ -456,7 +456,7 @@ function buildAdminPanel() {
     <div class="admin-stats">
       <div><small>Status</small><strong class="admin-status"><span class="status-dot closed" data-admin-status-dot aria-hidden="true"></span><span data-admin-status>Carregando…</span></strong></div>
       <div><small>Contagem</small><strong data-admin-count>0 votos</strong></div>
-      <div><small>Sessão atual</small><strong data-admin-session>—</strong></div>
+      <div><small>Sessão atual</small><strong data-admin-session>-</strong></div>
     </div>
     <div class="admin-actions">
       <button class="button button-admin" type="button" data-admin-action="open">Abrir votação</button>

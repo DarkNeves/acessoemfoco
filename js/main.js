@@ -1,6 +1,6 @@
 import { mountHeroVisual } from "./hero-visuals.js";
 import { setupI18n, t } from "./i18n.js";
-import { closeAccessibilitySettings, setupAccessibilitySettings } from "./settings.js";
+import { closeAccessibilitySettings, setupAccessibilitySettings } from "./settings.js?v=2";
 import { setupSplashScreen } from "./splash.js?v=6";
 
 function setupSmoothScrolling() {
@@ -82,11 +82,19 @@ function setupNavigation() {
 
 function setupScrollEffects() {
   const backToTop = document.querySelector("[data-back-to-top]");
+  const focusTop = () => document.querySelector(".brand")?.focus({ preventScroll: true });
   backToTop.addEventListener("click", () => {
-    if (window.siteLenis) window.siteLenis.scrollTo(0);
-    else document.querySelector("#topo").scrollIntoView();
+    if (window.siteLenis) window.siteLenis.scrollTo(0, { onComplete: focusTop });
+    else {
+      document.querySelector("#topo").scrollIntoView();
+      focusTop();
+    }
   });
-  const updateButton = () => backToTop.classList.toggle("visible", window.scrollY > 700);
+  const updateButton = () => {
+    const visible = window.scrollY > 700;
+    backToTop.hidden = !visible;
+    backToTop.classList.toggle("visible", visible);
+  };
   window.addEventListener("scroll", updateButton, { passive: true });
   updateButton();
 
@@ -112,12 +120,18 @@ function setupScreenPreview() {
   const title = document.querySelector("#screen-preview-title");
   const closeButton = document.querySelector("[data-preview-close]");
   if (!dialog || !image || !title || !closeButton) return;
+  let lastPreviewTrigger = null;
+
+  const closeDialog = () => {
+    if (dialog.open) dialog.close();
+  };
 
   document.querySelectorAll("[data-preview-src]").forEach((button) => {
     button.addEventListener("click", () => {
       const figure = button.closest("figure");
       const sourceImage = figure?.querySelector("img");
       const siteName = figure?.querySelector("figcaption > span")?.textContent?.trim() || "";
+      lastPreviewTrigger = button;
       image.src = button.dataset.previewSrc;
       image.alt = sourceImage?.alt || "";
       title.textContent = siteName ? `${t("Visualização em tela cheia")}: ${siteName}` : t("Visualização em tela cheia");
@@ -126,9 +140,32 @@ function setupScreenPreview() {
     });
   });
 
-  closeButton.addEventListener("click", () => dialog.close());
+  closeButton.addEventListener("click", closeDialog);
   dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) dialog.close();
+    if (event.target === dialog) closeDialog();
+  });
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeDialog();
+  });
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key !== "Tab") return;
+    const focusable = [...dialog.querySelectorAll("button:not([disabled]), a[href], [tabindex]:not([tabindex='-1'])")]
+      .filter((element) => element.getClientRects().length);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+      event.preventDefault();
+      (event.shiftKey ? last : first).focus();
+    }
+  });
+  dialog.addEventListener("close", () => {
+    image.removeAttribute("src");
+    image.alt = "";
+    title.textContent = t("Visualização em tela cheia");
+    if (lastPreviewTrigger?.isConnected) lastPreviewTrigger.focus();
+    lastPreviewTrigger = null;
   });
 }
 

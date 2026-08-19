@@ -22,7 +22,7 @@ export async function loadLighthouseData() {
     if (!Number.isFinite(score)) return;
     if (element.classList.contains("animated-score")) {
       element.dataset.finalScore = String(score);
-      element.querySelector(".score-visual").textContent = "—";
+      element.querySelector(".score-visual").textContent = "-";
       element.querySelector(".score-accessible").textContent = t("__final_score", { score });
     } else {
       element.textContent = String(score);
