@@ -4,30 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description"
-    content="Apresentação acadêmica sobre a análise comparativa de acessibilidade de três páginas web com o Lighthouse.">
+  <meta name="description" content="Apresentação acadêmica sobre análise de acessibilidade em aplicativos móveis com ferramentas de inspeção de acessibilidade.">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#176b3a">
-  <title>Farol da Acessibilidade</title>
+  <title>Análise de Acessibilidade em Aplicativos</title>
   <script>
-    const normalizedPath = location.pathname.replace(/\/+$/, "") || "/";
-    if (normalizedPath === "/admisrael98839") {
-      document.documentElement.classList.add("admin-route", "admin-auth-pending");
-      window.addEventListener("DOMContentLoaded", () => {
-        window.setTimeout(() => {
-          if (!document.documentElement.classList.contains("admin-auth-pending")) return;
-          const loading = document.querySelector("[data-admin-loading]");
-          const login = document.querySelector("[data-admin-login]");
-          if (!loading || !login) return;
-          loading.hidden = true;
-          login.hidden = false;
-          document.querySelector("#admin-email")?.focus();
-        }, 3000);
-      }, { once: true });
-    }
     try {
-      const savedLanguage = localStorage.getItem("farolLanguage");
-      if (savedLanguage === "en" || savedLanguage === "es") document.documentElement.classList.add("i18n-pending");
       const savedSettings = JSON.parse(localStorage.getItem("farolAccessibilitySettings") ?? "{}");
       if (savedSettings.theme === "dark") document.documentElement.dataset.theme = "dark";
     } catch { }
@@ -35,9 +17,9 @@
   </script>
   <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./libs/lenis/lenis.css">
-  <link rel="stylesheet" href="./css/style.css?v=7">
+  <link rel="stylesheet" href="./css/style.css?v=8">
   <script src="./libs/lenis/lenis.min.js" defer></script>
-  <script type="module" src="./js/main.js?v=6"></script>
+  <script type="module" src="./js/main.js?v=7"></script>
 </head>
 
 <body id="topo">
@@ -48,126 +30,58 @@
 
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#topo" aria-label="Farol da Acessibilidade — voltar ao início">
+      <a class="brand" href="#topo" aria-label="Análise de Acessibilidade — voltar ao início">
         <img src="./img/logo-ifrr.png" width="132" height="175" alt="">
-        <span class="brand-text"><strong>Farol da Acessibilidade</strong><span>Análise com Lighthouse</span></span>
+        <span class="brand-text"><strong>Análise de Acessibilidade</strong><span>Aplicativos móveis</span></span>
       </a>
       <button class="botao-menu" id="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
         <span>Menu</span><span class="icone-menu" aria-hidden="true"></span>
       </button>
       <nav class="site-nav" id="menu-principal" aria-label="Navegação principal">
         <ul>
-          <li class="desktop-settings-item"><button class="settings-trigger" id="open-settings-desktop"
-              data-settings-trigger type="button" aria-controls="settings-panel" aria-expanded="false"><svg
-                aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path>
-                <circle cx="16" cy="7" r="2"></circle>
-                <circle cx="8" cy="17" r="2"></circle>
-              </svg> Configurar site</button></li>
-          <li><a href="#sites">Sites</a></li>
-          <li><a href="#dinamica">Dinâmica</a></li>
-          <li><a href="#analise">Análise</a></li>
-          <li><a href="#relatorios">Relatórios</a></li>
+          <li class="desktop-settings-item"><button class="settings-trigger" id="open-settings-desktop" data-settings-trigger type="button" aria-controls="settings-panel" aria-expanded="false"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path><circle cx="16" cy="7" r="2"></circle><circle cx="8" cy="17" r="2"></circle></svg> Configurar site</button></li>
+          <li><a href="#objetivo">Objetivo</a></li>
+          <li><a href="#metodologia">Metodologia</a></li>
+          <li><a href="#aplicativos">Aplicativos</a></li>
+          <li><a href="#problemas">Síntese</a></li>
         </ul>
       </nav>
       <div class="header-tools">
-        <div class="language-picker">
-          <button class="language-toggle" id="language-toggle" type="button"
-            aria-label="Selecionar idioma PT. Atual: Português" aria-haspopup="listbox" aria-expanded="false"
-            aria-controls="language-menu">
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="9"></circle>
-              <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path>
-            </svg>
-            <span id="language-current">PT</span>
-            <svg class="language-chevron" aria-hidden="true" viewBox="0 0 24 24">
-              <path d="m8 10 4 4 4-4"></path>
-            </svg>
-          </button>
-          <!-- [html-validate-disable-next prefer-native-element] -->
-          <div class="language-menu" id="language-menu" role="listbox" aria-label="Idioma" data-lenis-prevent hidden>
-            <button type="button" role="option" data-language="pt-BR"
-              aria-selected="true"><span>PT</span><small>Português</small><svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="m5 12 4 4L19 6"></path>
-              </svg></button>
-            <button type="button" role="option" data-language="en"
-              aria-selected="false"><span>EN</span><small>English</small><svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="m5 12 4 4L19 6"></path>
-              </svg></button>
-            <button type="button" role="option" data-language="es"
-              aria-selected="false"><span>ES</span><small>Español</small><svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="m5 12 4 4L19 6"></path>
-              </svg></button>
-          </div>
-        </div>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Ativar tema escuro">
-          <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path>
-          </svg>
-          <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3.5"></circle>
-            <path
-              d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4">
-            </path>
-          </svg>
+          <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path></svg>
+          <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
         </button>
       </div>
     </div>
-    <button class="settings-tab-trigger" id="open-settings-mobile" data-settings-trigger type="button"
-      aria-controls="settings-panel" aria-expanded="false">
+    <button class="settings-tab-trigger" id="open-settings-mobile" data-settings-trigger type="button" aria-controls="settings-panel" aria-expanded="false">
       <span>Configuração</span>
-      <svg class="settings-tab-chevron" aria-hidden="true" viewBox="0 0 24 24">
-        <path d="m7 9 5 5 5-5"></path>
-      </svg>
+      <svg class="settings-tab-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"></path></svg>
     </button>
     <div class="settings-panel" id="settings-panel" hidden>
       <div class="settings-panel-clip">
-        <section class="settings-panel-surface" aria-labelledby="settings-title" aria-describedby="settings-description"
-          data-lenis-prevent>
+        <section class="settings-panel-surface" aria-labelledby="settings-title" aria-describedby="settings-description" data-lenis-prevent>
           <div class="settings-header">
-            <div>
-              <p class="eyebrow">Preferências de leitura</p>
-              <h2 id="settings-title">Configurar site</h2>
-            </div>
-            <button class="settings-close" id="close-settings" type="button" aria-label="Fechar configurações"><span
-                aria-hidden="true">×</span></button>
+            <div><p class="eyebrow">Preferências de leitura</p><h2 id="settings-title">Configurar site</h2></div>
+            <button class="settings-close" id="close-settings" type="button" aria-label="Fechar configurações"><span aria-hidden="true">×</span></button>
           </div>
-          <p id="settings-description">Ajuste a apresentação conforme sua necessidade. As escolhas ficam salvas neste
-            navegador.</p>
-
+          <p id="settings-description">Ajuste a apresentação conforme sua necessidade. As escolhas ficam salvas neste navegador.</p>
           <div class="settings-content">
             <section class="settings-group" aria-labelledby="text-size-title">
-              <div>
-                <h3 id="text-size-title">Tamanho do texto</h3>
-                <p id="text-size-status" aria-live="polite">Padrão — 100%</p>
-              </div>
+              <div><h3 id="text-size-title">Tamanho do texto</h3><p id="text-size-status" aria-live="polite">Padrão — 100%</p></div>
               <div class="text-size-actions">
-                <button type="button" id="text-decrease" aria-label="Diminuir tamanho do texto">A<span
-                    aria-hidden="true">−</span></button>
+                <button type="button" id="text-decrease" aria-label="Diminuir tamanho do texto">A<span aria-hidden="true">−</span></button>
                 <button type="button" id="text-reset">Padrão</button>
-                <button type="button" id="text-increase" aria-label="Aumentar tamanho do texto">A<span
-                    aria-hidden="true">+</span></button>
+                <button type="button" id="text-increase" aria-label="Aumentar tamanho do texto">A<span aria-hidden="true">+</span></button>
               </div>
             </section>
-
             <div class="toggle-list">
-              <label class="toggle-option"><span><b>Contraste reforçado</b><small>Aprofunda a diferença entre textos e
-                    superfícies.</small></span><input type="checkbox" id="enhanced-contrast"><i
-                  aria-hidden="true"></i></label>
-              <label class="toggle-option"><span><b>Alto contraste</b><small>Aplica uma combinação máxima de preto,
-                    branco e amarelo.</small></span><input type="checkbox" id="high-contrast"><i
-                  aria-hidden="true"></i></label>
-              <label class="toggle-option"><span><b>Maior espaçamento de texto</b><small>Aumenta altura das linhas e
-                    distância entre caracteres.</small></span><input type="checkbox" id="text-spacing"><i
-                  aria-hidden="true"></i></label>
-              <label class="toggle-option"><span><b>Destacar links</b><small>Reforça sublinhado e identificação dos
-                    links de texto.</small></span><input type="checkbox" id="highlight-links"><i
-                  aria-hidden="true"></i></label>
-              <label class="toggle-option"><span><b>Scroll suave</b><small>Suaviza a rolagem entre as áreas da
-                    página.</small></span><input type="checkbox" id="smooth-scroll"><i aria-hidden="true"></i></label>
+              <label class="toggle-option"><span><b>Contraste reforçado</b><small>Aprofunda a diferença entre textos e superfícies.</small></span><input type="checkbox" id="enhanced-contrast"><i aria-hidden="true"></i></label>
+              <label class="toggle-option"><span><b>Alto contraste</b><small>Aplica uma combinação máxima de preto, branco e amarelo.</small></span><input type="checkbox" id="high-contrast"><i aria-hidden="true"></i></label>
+              <label class="toggle-option"><span><b>Maior espaçamento de texto</b><small>Aumenta altura das linhas e distância entre caracteres.</small></span><input type="checkbox" id="text-spacing"><i aria-hidden="true"></i></label>
+              <label class="toggle-option"><span><b>Destacar links</b><small>Reforça sublinhado e identificação dos links de texto.</small></span><input type="checkbox" id="highlight-links"><i aria-hidden="true"></i></label>
+              <label class="toggle-option"><span><b>Scroll suave</b><small>Suaviza a rolagem entre as áreas da página.</small></span><input type="checkbox" id="smooth-scroll"><i aria-hidden="true"></i></label>
             </div>
           </div>
-
           <div class="settings-footer">
             <button class="button button-secondary" id="restore-settings" type="button">Restaurar padrão</button>
             <button class="button button-primary" id="apply-settings" type="button">Concluir</button>
@@ -179,615 +93,168 @@
   </header>
 
   <main id="main-content" tabindex="-1">
-    <div class="admin-access" id="admin-access">
-      <div class="admin-access-card">
-        <div class="admin-access-brand" aria-hidden="true">
-          <img src="./img/logo-ifrr.png" width="132" height="175" alt="">
-        </div>
-
-        <div data-admin-loading role="status" aria-live="polite">
-          <p class="eyebrow">Farol da Acessibilidade</p>
-          <h1 id="admin-access-title">Verificando acesso…</h1>
-          <span class="admin-access-spinner" aria-hidden="true"></span>
-        </div>
-
-        <form class="admin-login-form" data-admin-login hidden novalidate>
-          <p class="eyebrow">Farol da Acessibilidade</p>
-          <h1>Acesso administrativo</h1>
-          <p class="admin-access-note">Área restrita.</p>
-
-          <div class="field-group">
-            <label for="admin-email">E-mail</label>
-            <input id="admin-email" name="email" type="email" autocomplete="username" required>
-          </div>
-
-          <div class="field-group">
-            <label for="admin-password">Senha</label>
-            <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
-          </div>
-
-          <p class="form-feedback admin-login-feedback" data-admin-login-feedback role="alert" aria-live="assertive"></p>
-          <button class="button button-primary button-wide" type="submit">Entrar</button>
-        </form>
-
-        <div data-admin-denied hidden>
-          <p class="eyebrow">Farol da Acessibilidade</p>
-          <h1>Acesso não autorizado.</h1>
-          <p class="admin-access-note">Esta conta não possui permissão administrativa.</p>
-          <button class="button button-secondary button-wide" type="button" data-admin-signout>Sair</button>
-        </div>
-      </div>
-    </div>
-
     <section class="hero" aria-labelledby="titulo-principal">
       <div class="container hero-grid">
         <div class="hero-copy reveal">
-          <p class="institution-name">Instituto Federal de Educação, Ciência e Tecnologia de Roraima - IFRR</p>
-          <p class="eyebrow activity-label"><span class="activity-status" aria-hidden="true"></span> Atividade acadêmica
-          </p>
-          <h1 id="titulo-principal">Análise de Acessibilidade Web</h1>
-          <p class="lead">Uma análise comparativa utilizando o Lighthouse.</p>
-          <p class="hero-names">Israel <span aria-hidden="true">•</span> Andreia <span aria-hidden="true">•</span> Kelly
-          </p>
+          <p class="institution-name">[Curso / instituição]</p>
+          <p class="eyebrow activity-label"><span class="activity-status" aria-hidden="true"></span> Apresentação acadêmica</p>
+          <h1 id="titulo-principal">Análise de Acessibilidade em Aplicativos</h1>
+          <p class="lead">Avaliação de interfaces mobile utilizando ferramentas de inspeção de acessibilidade.</p>
+          <p class="hero-indicator">3 aplicativos <span aria-hidden="true">•</span> 3 problemas de acessibilidade <span aria-hidden="true">•</span> 3 propostas de solução</p>
           <dl class="academic-data">
-            <div class="academic-discipline">
-              <dt>Disciplina</dt>
-              <dd>Multimídia e Interação Humano-Computador</dd>
-            </div>
-            <div>
-              <dt>Professor</dt>
-              <dd>Ricardo Jacauna</dd>
-            </div>
-            <div>
-              <dt>Turma</dt>
-              <dd>MOD 4 - Noturno</dd>
-            </div>
+            <div class="academic-discipline"><dt>Disciplina</dt><dd>[Nome da disciplina]</dd></div>
+            <div><dt>Professor(a)</dt><dd>[Nome do(a) professor(a)]</dd></div>
+            <div><dt>Turma</dt><dd>[Identificação da turma]</dd></div>
+            <div class="academic-date"><dt>Apresentação</dt><dd><time datetime="2026-08-19">19/08/2026</time></dd></div>
           </dl>
-          <a class="button button-primary" href="#sites">Iniciar apresentação <span aria-hidden="true">↓</span></a>
+          <a class="button button-primary" href="#objetivo">Iniciar apresentação <span aria-hidden="true">↓</span></a>
         </div>
         <div class="hero-visual reveal" data-hero-visual aria-hidden="true"></div>
       </div>
     </section>
 
-    <section class="section" id="sites" aria-labelledby="sites-titulo">
-      <div class="container">
-        <div class="section-heading center reveal">
-          <p class="eyebrow">O ponto de partida</p>
-          <h2 id="sites-titulo">Três páginas, três contextos</h2>
-          <p>As capturas abaixo foram extraídas dos próprios relatórios usados nesta atividade. Observe antes de
-            conhecer as notas.</p>
-        </div>
-        <div class="site-grid">
-          <article class="site-card reveal">
-            <img src="./img/sites/optimized/480/gov.webp"
-              srcset="./img/sites/optimized/480/gov.webp 480w, ./img/sites/optimized/gov.webp 900w"
-              sizes="(max-width: 860px) calc(100vw - 2rem), (max-width: 980px) calc(50vw - 2rem), 382px" width="900"
-              height="435" loading="lazy" decoding="async"
-              alt="Captura da página inicial do GOV.BR no momento da análise">
-            <div class="site-card-body">
-              <p class="site-index">01</p>
-              <h3>GOV.BR</h3>
-              <p>Portal oficial de serviços e informações do Governo Federal.</p><a class="site-visit-button"
-                href="https://www.gov.br/pt-br" target="_blank" rel="noopener noreferrer">Visitar site <span
-                  class="sr-only">GOV.BR (abre em nova aba)</span><span aria-hidden="true">↗</span></a>
-            </div>
-          </article>
-          <article class="site-card reveal">
-            <img src="./img/sites/optimized/480/mercado-livre.webp"
-              srcset="./img/sites/optimized/480/mercado-livre.webp 480w, ./img/sites/optimized/mercado-livre.webp 900w"
-              sizes="(max-width: 860px) calc(100vw - 2rem), (max-width: 980px) calc(50vw - 2rem), 382px" width="900"
-              height="427" loading="lazy" decoding="async"
-              alt="Captura da página inicial do Mercado Livre no momento da análise">
-            <div class="site-card-body">
-              <p class="site-index">02</p>
-              <h3>Mercado Livre</h3>
-              <p>Plataforma de comércio eletrônico.</p><a class="site-visit-button"
-                href="https://www.mercadolivre.com.br/" target="_blank" rel="noopener noreferrer">Visitar site <span
-                  class="sr-only">Mercado Livre (abre em nova aba)</span><span aria-hidden="true">↗</span></a>
-            </div>
-          </article>
-          <article class="site-card reveal">
-            <img src="./img/sites/optimized/480/tipos-de-interface.webp"
-              srcset="./img/sites/optimized/480/tipos-de-interface.webp 480w, ./img/sites/optimized/tipos-de-interface.webp 900w"
-              sizes="(max-width: 860px) calc(100vw - 2rem), (max-width: 980px) calc(50vw - 2rem), 382px" width="900"
-              height="431" loading="lazy" decoding="async"
-              alt="Captura do site Tipos de Interfaces de Usuário no momento da análise">
-            <div class="site-card-body">
-              <p class="site-index">03</p>
-              <h3>Tipos de Interfaces de Usuário</h3>
-              <p>Site desenvolvido pela equipe na Atividade 05.</p><a class="site-visit-button"
-                href="https://darkneves.github.io/Tipos-de-interfaces-de-usuario/index.html" target="_blank"
-                rel="noopener noreferrer">Visitar site <span class="sr-only">da equipe (abre em nova aba)</span><span
-                  aria-hidden="true">↗</span></a>
-            </div>
-          </article>
-        </div>
-        <div class="question-callout reveal"><span aria-hidden="true">?</span>
-          <p>Mas qual deles você acredita que possui a melhor acessibilidade?</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-dark" id="dinamica" aria-labelledby="dinamica-titulo">
+    <section class="section section-soft" id="objetivo" aria-labelledby="objetivo-titulo">
       <div class="container narrow">
         <div class="section-heading center reveal">
-          <p class="eyebrow">Dinâmica ao vivo</p>
-          <h2 id="dinamica-titulo">O Chute da Acessibilidade</h2>
-          <p>Observe os três sites e tente descobrir qual obteve a melhor e a pior pontuação de acessibilidade no
-            Lighthouse.</p>
+          <p class="eyebrow">O ponto de partida</p>
+          <h2 id="objetivo-titulo">Objetivo</h2>
+          <p>Esta atividade tem como objetivo avaliar a acessibilidade de aplicativos móveis utilizando uma ferramenta de inspeção de acessibilidade. Foram analisados três aplicativos diferentes para identificar possíveis barreiras de interação e compreender as recomendações apresentadas pela ferramenta para melhorar a experiência dos usuários.</p>
         </div>
-
-        <div class="mini-previews reveal">
-          <figure><img src="./img/sites/optimized/480/gov.webp"
-              srcset="./img/sites/optimized/480/gov.webp 480w, ./img/sites/optimized/gov.webp 900w" sizes="225px"
-              width="900" height="435" loading="lazy" decoding="async" alt="Prévia do GOV.BR">
-            <figcaption>GOV.BR</figcaption>
-          </figure>
-          <figure><img src="./img/sites/optimized/480/mercado-livre.webp"
-              srcset="./img/sites/optimized/480/mercado-livre.webp 480w, ./img/sites/optimized/mercado-livre.webp 900w"
-              sizes="225px" width="900" height="427" loading="lazy" decoding="async" alt="Prévia do Mercado Livre">
-            <figcaption>Mercado Livre</figcaption>
-          </figure>
-          <figure><img src="./img/sites/optimized/480/tipos-de-interface.webp"
-              srcset="./img/sites/optimized/480/tipos-de-interface.webp 480w, ./img/sites/optimized/tipos-de-interface.webp 900w"
-              sizes="225px" width="900" height="431" loading="lazy" decoding="async" alt="Prévia do site da equipe">
-            <figcaption>Site da equipe</figcaption>
-          </figure>
-        </div>
-
-        <div class="vote-shell reveal">
-          <div class="vote-topline">
-            <div><span class="status-dot" id="status-dot" aria-hidden="true"></span><strong
-                id="vote-status-label">Conectando à dinâmica…</strong></div>
-            <p id="vote-counter" aria-live="polite">0 votos</p>
-          </div>
-
-          <div class="notice" id="vote-notice" role="status" aria-live="polite">Aguarde enquanto verificamos o estado da
-            votação.</div>
-
-          <form id="vote-form" hidden novalidate>
-            <div class="field-group">
-              <label for="participant-name">Seu nome</label>
-              <input id="participant-name" name="name" type="text" maxlength="40" autocomplete="name" required
-                aria-describedby="name-help">
-              <small id="name-help">Use até 40 caracteres. Seu nome não será exibido publicamente.</small>
-            </div>
-
-            <fieldset>
-              <legend>Qual site você acredita que teve a <strong>melhor</strong> acessibilidade?</legend>
-              <div class="radio-grid">
-                <label><input type="radio" name="bestSite" value="govbr" required><span><b>GOV.BR</b><small>Portal
-                      público</small></span></label>
-                <label><input type="radio" name="bestSite" value="mercadolivre"><span><b>Mercado
-                      Livre</b><small>Comércio eletrônico</small></span></label>
-                <label><input type="radio" name="bestSite" value="equipe"><span><b>Site da equipe</b><small>Atividade
-                      05</small></span></label>
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <legend>Qual site você acredita que teve a <strong>pior</strong> acessibilidade?</legend>
-              <div class="radio-grid">
-                <label><input type="radio" name="worstSite" value="govbr" required><span><b>GOV.BR</b><small>Portal
-                      público</small></span></label>
-                <label><input type="radio" name="worstSite" value="mercadolivre"><span><b>Mercado
-                      Livre</b><small>Comércio eletrônico</small></span></label>
-                <label><input type="radio" name="worstSite" value="equipe"><span><b>Site da equipe</b><small>Atividade
-                      05</small></span></label>
-              </div>
-            </fieldset>
-
-            <p class="form-feedback" id="form-feedback" role="alert"></p>
-            <button class="button button-primary button-wide" type="submit">Enviar meu palpite</button>
-          </form>
-        </div>
-
-        <div id="admin-mount"></div>
+        <div class="question-callout reveal"><span aria-hidden="true">✓</span><p>Observar, registrar e propor melhorias sem substituir a avaliação humana.</p></div>
       </div>
     </section>
 
-    <section class="section section-soft" id="resultado-turma" aria-labelledby="turma-titulo" hidden>
+    <section class="section section-dark" id="metodologia" aria-labelledby="metodologia-titulo">
       <div class="container">
-        <div class="section-heading center">
-          <p class="eyebrow">A opinião da sala</p>
-          <h2 id="turma-titulo">Resultado da turma</h2>
-          <p>Os gráficos usam somente os votos reais desta sessão e não exibem nomes.</p>
+        <div class="section-heading center reveal">
+          <p class="eyebrow">Como a análise foi realizada</p>
+          <h2 id="metodologia-titulo">Metodologia</h2>
+          <p>Um processo direto em quatro etapas, da escolha dos aplicativos à interpretação dos resultados.</p>
         </div>
-        <div class="poll-results">
-          <article class="poll-panel">
-            <h3>Qual site a turma acreditou ser o mais acessível?</h3>
-            <div id="best-results" class="bars"></div>
-          </article>
-          <article class="poll-panel">
-            <h3>Qual site a turma acreditou ser o menos acessível?</h3>
-            <div id="worst-results" class="bars"></div>
-          </article>
-        </div>
-        <p class="result-question">Será que a turma acertou?</p>
-      </div>
-    </section>
-
-    <section class="section locked-section" id="resultados-bloqueados" aria-labelledby="bloqueado-titulo">
-      <div class="container locked-card">
-        <div class="lock-icon" aria-hidden="true">⌛</div>
-        <div>
-          <p class="eyebrow">Sem spoilers</p>
-          <h2 id="bloqueado-titulo">Resultados oficiais bloqueados</h2>
-          <p>Aguardando a revelação do apresentador…</p>
+        <div class="pillar-grid methodology-grid">
+          <article class="reveal"><span aria-hidden="true">01</span><h3>Selecionar os aplicativos</h3><p>Definir três interfaces mobile para a avaliação.</p></article>
+          <article class="reveal"><span aria-hidden="true">02</span><h3>Executar o Scanner de Acessibilidade</h3><p>Inspecionar as telas escolhidas com a ferramenta.</p></article>
+          <article class="reveal"><span aria-hidden="true">03</span><h3>Identificar os problemas</h3><p>Registrar as barreiras apontadas durante a análise.</p></article>
+          <article class="reveal"><span aria-hidden="true">04</span><h3>Analisar as recomendações</h3><p>Relacionar cada diagnóstico a uma possível correção.</p></article>
         </div>
       </div>
     </section>
 
-    <div id="conteudo-oficial" hidden>
-      <section class="section reveal-section" id="revelacao" aria-labelledby="revelacao-titulo">
+    <div id="aplicativos">
+      <section class="section app-section" id="aplicativo-01" aria-labelledby="aplicativo-01-titulo">
         <div class="container">
-          <div class="section-heading center">
-            <p class="eyebrow">A resposta oficial</p>
-            <h2 id="revelacao-titulo">O ranking de acessibilidade</h2>
-            <p>Primeiro, apenas a categoria central desta atividade.</p>
+          <div class="app-section-heading reveal">
+            <div class="app-icon-placeholder" aria-hidden="true">01</div>
+            <div><p class="eyebrow">Aplicativo analisado</p><h2 id="aplicativo-01-titulo">Aplicativo 01 — [Nome do aplicativo]</h2><p>[Insira uma breve descrição do aplicativo e da tela avaliada.]</p></div>
           </div>
-          <ol class="ranking">
-            <li class="rank-card winner"><span class="rank-place">1º</span>
-              <div>
-                <h3>Site da equipe</h3>
-                <p>No recorte analisado</p>
-              </div><strong class="animated-score" data-score-site="equipe" data-score-metric="accessibility"><span
-                  class="score-visual" aria-hidden="true">—</span><span class="sr-only score-accessible">Nota
-                  final</span></strong>
-            </li>
-            <li class="rank-card"><span class="rank-place">2º</span>
-              <div>
-                <h3>GOV.BR</h3>
-                <p>Portal público</p>
-              </div><strong class="animated-score" data-score-site="govbr" data-score-metric="accessibility"><span
-                  class="score-visual" aria-hidden="true">—</span><span class="sr-only score-accessible">Nota
-                  final</span></strong>
-            </li>
-            <li class="rank-card"><span class="rank-place">3º</span>
-              <div>
-                <h3>Mercado Livre</h3>
-                <p>Comércio eletrônico</p>
-              </div><strong class="animated-score" data-score-site="mercadolivre"
-                data-score-metric="accessibility"><span class="score-visual" aria-hidden="true">—</span><span
-                  class="sr-only score-accessible">Nota final</span></strong>
-            </li>
-          </ol>
-          <p class="surprise">O resultado surpreendeu você?</p>
-        </div>
-      </section>
-
-      <section class="section section-soft" id="comparacao" aria-labelledby="comparacao-titulo">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Visão completa</p>
-            <h2 id="comparacao-titulo">Comparação dos três relatórios</h2>
-            <p>A coluna de acessibilidade está destacada porque ela é o foco da análise.</p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <caption>Notas oficiais extraídas dos relatórios Lighthouse</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Site</th>
-                  <th scope="col">Desempenho</th>
-                  <th scope="col" class="focus-column">Acessibilidade</th>
-                  <th scope="col">Práticas recomendadas</th>
-                  <th scope="col">SEO</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Site da equipe</th>
-                  <td data-label="Desempenho" data-score-site="equipe" data-score-metric="performance">—</td>
-                  <td data-label="Acessibilidade" class="focus-column"><strong data-score-site="equipe"
-                      data-score-metric="accessibility">—</strong></td>
-                  <td data-label="Práticas recomendadas" data-score-site="equipe" data-score-metric="bestPractices">—
-                  </td>
-                  <td data-label="SEO" data-score-site="equipe" data-score-metric="seo">—</td>
-                </tr>
-                <tr>
-                  <th scope="row">GOV.BR</th>
-                  <td data-label="Desempenho" data-score-site="govbr" data-score-metric="performance">—</td>
-                  <td data-label="Acessibilidade" class="focus-column"><strong data-score-site="govbr"
-                      data-score-metric="accessibility">—</strong></td>
-                  <td data-label="Práticas recomendadas" data-score-site="govbr" data-score-metric="bestPractices">—
-                  </td>
-                  <td data-label="SEO" data-score-site="govbr" data-score-metric="seo">—</td>
-                </tr>
-                <tr>
-                  <th scope="row">Mercado Livre</th>
-                  <td data-label="Desempenho"><span data-score-site="mercadolivre"
-                      data-score-metric="performance">—</span><sup>*</sup></td>
-                  <td data-label="Acessibilidade" class="focus-column"><strong data-score-site="mercadolivre"
-                      data-score-metric="accessibility">—</strong></td>
-                  <td data-label="Práticas recomendadas" data-score-site="mercadolivre"
-                    data-score-metric="bestPractices">—</td>
-                  <td data-label="SEO" data-score-site="mercadolivre" data-score-metric="seo">—</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="source-note"><strong>* Atenção:</strong> o Lighthouse registrou interferência de extensões do
-            navegador durante a medição de desempenho do Mercado Livre. Por isso, o foco comparativo permanece na
-            acessibilidade.</p>
-          <div class="fair-comparison"><span aria-hidden="true"><span class="fair-comparison-symbol">≠</span><svg
-                class="fair-comparison-icon" width="24" height="24" viewBox="0 0 24 24"
-                preserveAspectRatio="xMidYMid meet">
-                <path d="M12 3v18M5 6h14M5 6l-3 6h6L5 6Zm14 0-3 6h6l-3-6ZM8 21h8"></path>
-                <path d="M2 12c.4 2 1.4 3 3 3s2.6-1 3-3M16 12c.4 2 1.4 3 3 3s2.6-1 3-3"></path>
-              </svg></span>
-            <div>
-              <h3>Contextos diferentes exigem cuidado</h3>
-              <p>GOV.BR e Mercado Livre reúnem muito mais conteúdo, integrações e componentes. A conclusão correta é:
-                <strong>na página e no recorte analisados, o site da equipe obteve a maior pontuação automatizada de
-                  acessibilidade.</strong></p>
+          <div class="app-analysis-layout">
+            <figure class="screenshot-card reveal">
+              <div class="phone-frame"><div class="screenshot-placeholder" role="img" aria-label="Espaço reservado para a captura de tela do Aplicativo 01">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M9 6h6M9 18h6M8 14l2.5-3 2 2 1.5-1.5L17 15"></path></svg>
+                <strong>[Insira a captura de tela aqui]</strong><span>Interface analisada no Aplicativo 01</span>
+              </div></div>
+              <figcaption><strong>[Nome do aplicativo]</strong><span>Captura da tela submetida à inspeção de acessibilidade.</span></figcaption>
+            </figure>
+            <div class="finding-stack">
+              <article class="issue-card finding-card finding-problem reveal"><span class="issue-number">DIAGNÓSTICO</span><h3>Problema encontrado</h3><p>[Insira o problema de acessibilidade realmente detectado.]</p></article>
+              <article class="issue-card finding-card finding-recommendation reveal"><span class="issue-number">FERRAMENTA</span><h3>Recomendação da ferramenta</h3><p>[Insira a recomendação fornecida pelo Scanner de Acessibilidade.]</p></article>
+              <article class="issue-card finding-card finding-solution reveal"><span class="issue-number">PROPOSTA</span><h3>Como corrigir</h3><p>[Insira a solução sugerida pela equipe.]</p></article>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section" id="lighthouse" aria-labelledby="lighthouse-titulo">
+      <section class="section section-soft app-section" id="aplicativo-02" aria-labelledby="aplicativo-02-titulo">
         <div class="container">
-          <div class="section-heading center">
-            <p class="eyebrow">Depois do palpite</p>
-            <h2 id="lighthouse-titulo">O que é o Lighthouse?</h2>
-            <p>Uma ferramenta automatizada do Google utilizada para avaliar a qualidade de páginas web.</p>
+          <div class="app-section-heading reveal">
+            <div class="app-icon-placeholder" aria-hidden="true">02</div>
+            <div><p class="eyebrow">Aplicativo analisado</p><h2 id="aplicativo-02-titulo">Aplicativo 02 — [Nome do aplicativo]</h2><p>[Insira uma breve descrição do aplicativo e da tela avaliada.]</p></div>
           </div>
-          <div class="pillar-grid">
-            <article><span aria-hidden="true">⚡</span>
-              <h3>Desempenho</h3>
-              <p>Velocidade e carregamento.</p>
-            </article>
-            <article class="pillar-focus"><span aria-hidden="true">♿</span>
-              <h3>Acessibilidade</h3>
-              <p>Uso por diferentes pessoas e tecnologias assistivas.</p>
-            </article>
-            <article><span aria-hidden="true">✓</span>
-              <h3>Práticas recomendadas</h3>
-              <p>Boas práticas técnicas e de segurança.</p>
-            </article>
-            <article><span aria-hidden="true">⌕</span>
-              <h3>SEO</h3>
-              <p>Boas práticas para mecanismos de busca.</p>
-            </article>
-          </div>
-          <div class="score-scale">
-            <div><strong>90–100</strong><span>✓ Bom</span></div>
-            <div><strong>50–89</strong><span>! Precisa melhorar</span></div>
-            <div><strong>0–49</strong><span>× Ruim</span></div>
+          <div class="app-analysis-layout">
+            <figure class="screenshot-card reveal">
+              <div class="phone-frame"><div class="screenshot-placeholder" role="img" aria-label="Espaço reservado para a captura de tela do Aplicativo 02">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M9 6h6M9 18h6M8 14l2.5-3 2 2 1.5-1.5L17 15"></path></svg>
+                <strong>[Insira a captura de tela aqui]</strong><span>Interface analisada no Aplicativo 02</span>
+              </div></div>
+              <figcaption><strong>[Nome do aplicativo]</strong><span>Captura da tela submetida à inspeção de acessibilidade.</span></figcaption>
+            </figure>
+            <div class="finding-stack">
+              <article class="issue-card finding-card finding-problem reveal"><span class="issue-number">DIAGNÓSTICO</span><h3>Problema encontrado</h3><p>[Insira o problema de acessibilidade realmente detectado.]</p></article>
+              <article class="issue-card finding-card finding-recommendation reveal"><span class="issue-number">FERRAMENTA</span><h3>Recomendação da ferramenta</h3><p>[Insira a recomendação fornecida pelo Scanner de Acessibilidade.]</p></article>
+              <article class="issue-card finding-card finding-solution reveal"><span class="issue-number">PROPOSTA</span><h3>Como corrigir</h3><p>[Insira a solução sugerida pela equipe.]</p></article>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="section section-soft" id="analise" aria-labelledby="analise-titulo">
+      <section class="section app-section" id="aplicativo-03" aria-labelledby="aplicativo-03-titulo">
         <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Inadequações encontradas</p>
-            <h2 id="analise-titulo">Do problema à solução</h2>
-            <p>Exemplos reais registrados nos relatórios, traduzidos para impactos cotidianos.</p>
+          <div class="app-section-heading reveal">
+            <div class="app-icon-placeholder" aria-hidden="true">03</div>
+            <div><p class="eyebrow">Aplicativo analisado</p><h2 id="aplicativo-03-titulo">Aplicativo 03 — [Nome do aplicativo]</h2><p>[Insira uma breve descrição do aplicativo e da tela avaliada.]</p></div>
           </div>
-
-          <article class="analysis-block">
-            <header>
-              <div>
-                <p class="site-label">GOV.BR</p>
-                <h3>Controles precisam comunicar sua função</h3>
-              </div><span class="score-badge"><b data-score-site="govbr"
-                  data-score-metric="accessibility">—</b><small>Acessibilidade</small></span>
-            </header>
-            <div class="issue-grid">
-              <div class="issue-card"><span class="issue-number">01</span>
-                <h4>Botão sem nome acessível</h4>
-                <div class="flow">
-                  <p><b>Problema</b>Botão da região de login sem texto compreensível por leitor de tela.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Impacto</b>Pode ser anunciado apenas como “botão”, sem explicar sua função.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Solução</b>Fornecer texto acessível coerente por conteúdo, <code>aria-label</code> ou
-                    <code>aria-labelledby</code>.</p>
-                </div><span class="impact critical">Impacto crítico no relatório</span>
-              </div>
-              <div class="issue-card"><span class="issue-number">02</span>
-                <h4>Nome acessível inconsistente</h4>
-                <div class="flow">
-                  <p><b>Problema</b>“Atalhos gov.br” tinha nome acessível “Abrir menu de seleção serviços”.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Impacto</b>Confunde leitores de tela e comandos por voz.</p><span aria-hidden="true">↓</span>
-                  <p><b>Solução</b>Incluir claramente o texto visível no nome acessível.</p>
-                </div>
-              </div>
-              <div class="issue-card"><span class="issue-number">03</span>
-                <h4>Alvos de toque pequenos</h4>
-                <div class="touch-demo"><span class="tiny-target" aria-hidden="true"></span><span>8 × 8 px</span><span
-                    aria-hidden="true">→</span><span class="good-target" aria-hidden="true"></span><span>mín. 24 × 24
-                    px</span></div>
-                <div class="flow">
-                  <p><b>Impacto</b>Dificulta o toque e o uso por pessoas com limitações motoras.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Solução</b>Aumentar área clicável e espaçamento dos indicadores.</p>
-                </div>
-              </div>
+          <div class="app-analysis-layout">
+            <figure class="screenshot-card reveal">
+              <div class="phone-frame"><div class="screenshot-placeholder" role="img" aria-label="Espaço reservado para a captura de tela do Aplicativo 03">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M9 6h6M9 18h6M8 14l2.5-3 2 2 1.5-1.5L17 15"></path></svg>
+                <strong>[Insira a captura de tela aqui]</strong><span>Interface analisada no Aplicativo 03</span>
+              </div></div>
+              <figcaption><strong>[Nome do aplicativo]</strong><span>Captura da tela submetida à inspeção de acessibilidade.</span></figcaption>
+            </figure>
+            <div class="finding-stack">
+              <article class="issue-card finding-card finding-problem reveal"><span class="issue-number">DIAGNÓSTICO</span><h3>Problema encontrado</h3><p>[Insira o problema de acessibilidade realmente detectado.]</p></article>
+              <article class="issue-card finding-card finding-recommendation reveal"><span class="issue-number">FERRAMENTA</span><h3>Recomendação da ferramenta</h3><p>[Insira a recomendação fornecida pelo Scanner de Acessibilidade.]</p></article>
+              <article class="issue-card finding-card finding-solution reveal"><span class="issue-number">PROPOSTA</span><h3>Como corrigir</h3><p>[Insira a solução sugerida pela equipe.]</p></article>
             </div>
-          </article>
-
-          <article class="analysis-block">
-            <header>
-              <div>
-                <p class="site-label">Mercado Livre</p>
-                <h3>Percepção visual e toque fazem diferença</h3>
-              </div><span class="score-badge"><b data-score-site="mercadolivre"
-                  data-score-metric="accessibility">—</b><small>Acessibilidade</small></span>
-            </header>
-            <div class="issue-grid">
-              <div class="issue-card"><span class="issue-number">01</span>
-                <h4>Contraste insuficiente</h4>
-                <div class="contrast-demo">
-                  <div class="contrast-before"><small>Antes · 3,19:1</small><strong>Frete grátis e rápido</strong></div>
-                  <div class="contrast-after"><small>Depois · contraste reforçado</small><strong>Frete grátis e
-                      rápido</strong></div>
-                </div>
-                <div class="flow">
-                  <p><b>Impacto</b>Dificulta a leitura para pessoas com baixa visão.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Solução</b>Usar combinação com pelo menos 4,5:1 neste contexto.</p>
-                </div>
-              </div>
-              <div class="issue-card"><span class="issue-number">02</span>
-                <h4>Link identificado só pela cor</h4>
-                <div class="link-demo"><span>Já tem uma conta?</span> <strong>Entrar</strong></div>
-                <div class="flow">
-                  <p><b>Problema</b>Contraste de 1,57:1 entre “Entrar” e o texto ao redor.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Solução</b>Adicionar sublinhado, peso ou outra indicação consistente.</p>
-                </div>
-              </div>
-              <div class="issue-card"><span class="issue-number">03</span>
-                <h4>Áreas clicáveis próximas</h4>
-                <div class="flow">
-                  <p><b>Problema</b>51 ocorrências de alvos com tamanho ou espaçamento insuficiente.</p><span
-                    aria-hidden="true">↓</span>
-                  <p><b>Impacto</b>Mais erros de toque em celulares.</p><span aria-hidden="true">↓</span>
-                  <p><b>Solução</b>Aumentar área de toque, <code>padding</code> e distância entre elementos.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="analysis-block team-analysis">
-            <header>
-              <div>
-                <p class="site-label">Site da equipe</p>
-                <h3>100 significa acessibilidade perfeita?</h3>
-              </div><span class="score-badge perfect"><b data-score-site="equipe"
-                  data-score-metric="accessibility">—</b><small>Acessibilidade</small></span>
-            </header>
-            <div class="hundred-answer"><strong>Não necessariamente.</strong>
-              <p>O site passou em todas as verificações automáticas que entraram no cálculo, mas o relatório ainda
-                registrou uma inconsistência de peso zero.</p>
-            </div>
-            <div class="mismatch">
-              <div><small>Texto visível</small><strong>MOD 4</strong></div><span aria-hidden="true">≠</span>
-              <div><small>Nome acessível</small><strong>Desativar rolagem suave</strong></div>
-            </div>
-            <p>A auditoria <code>label-content-name-mismatch</code> detectou a diferença. Como tinha peso zero naquele
-              relatório, a pontuação permaneceu 100.</p>
-            <div class="manual-checks">
-              <h4>O que ainda depende de avaliação manual?</h4>
-              <ul>
-                <li>Ordem lógica pelo teclado</li>
-                <li>Gerenciamento de foco</li>
-                <li>Conteúdo fora da tela</li>
-                <li>Landmarks e estrutura</li>
-                <li>Ordem visual e do DOM</li>
-                <li>Controles personalizados</li>
-              </ul>
-            </div>
-            <p class="key-message">Testes automatizados ajudam, mas não substituem testes manuais e testes com usuários.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="recomendacoes" aria-labelledby="recomendacoes-titulo">
-        <div class="container">
-          <div class="section-heading center">
-            <p class="eyebrow">Caminhos práticos</p>
-            <h2 id="recomendacoes-titulo">Recomendações que cabem no desenvolvimento</h2>
           </div>
-          <div class="recommendation-grid">
-            <article><span>01</span>
-              <h3>Nomear controles</h3>
-              <p>Todo botão e link deve comunicar claramente o que faz.</p>
-            </article>
-            <article><span>02</span>
-              <h3>Medir contraste</h3>
-              <p>Validar cores e não depender apenas delas para transmitir ação.</p>
-            </article>
-            <article><span>03</span>
-              <h3>Ampliar o toque</h3>
-              <p>Criar áreas confortáveis, separadas e fáceis de alcançar.</p>
-            </article>
-            <article><span>04</span>
-              <h3>Testar com teclado</h3>
-              <p>Verificar foco, ordem de navegação e acionamento dos controles.</p>
-            </article>
-            <article><span>05</span>
-              <h3>Combinar métodos</h3>
-              <p>Usar automação, revisão manual e, quando possível, testes com usuários.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section conclusion" id="conclusao" aria-labelledby="conclusao-titulo">
-        <div class="container narrow">
-          <p class="eyebrow">Síntese</p>
-          <h2 id="conclusao-titulo">Acessibilidade se constrói nos detalhes</h2>
-          <p class="conclusion-lead">Mesmo sites profissionais e amplamente utilizados podem apresentar inadequações. O
-            Lighthouse identifica muitos problemas, mas a avaliação humana continua necessária.</p>
-          <div class="statement-list">
-            <p>Acessibilidade não é apenas aparência.</p>
-            <p>Pequenos detalhes podem impedir alguém de utilizar uma interface.</p>
-            <p>Uma nota automática não substitui a experiência real do usuário.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-soft" id="relatorios" aria-labelledby="relatorios-titulo">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Evidências da atividade</p>
-            <h2 id="relatorios-titulo">Relatórios e arquivos</h2>
-            <p>Os documentos abaixo são os relatórios HTML originais, preservados sem alterações.</p>
-          </div>
-          <div class="report-grid">
-            <article><span aria-hidden="true">01</span>
-              <h3>GOV.BR</h3>
-              <p>Relatório Lighthouse completo.</p><a class="button button-secondary"
-                href="./documentos/www.gov.br-20260808T202500.html" target="_blank" rel="noopener noreferrer">Abrir
-                relatório <span class="sr-only">do GOV.BR (abre em nova aba)</span><span aria-hidden="true">↗</span></a>
-            </article>
-            <article><span aria-hidden="true">02</span>
-              <h3>Mercado Livre</h3>
-              <p>Relatório Lighthouse completo.</p><a class="button button-secondary"
-                href="./documentos/www.mercadolivre.com.br-20260808T202754.html" target="_blank"
-                rel="noopener noreferrer">Abrir relatório <span class="sr-only">do Mercado Livre (abre em nova
-                  aba)</span><span aria-hidden="true">↗</span></a>
-            </article>
-            <article><span aria-hidden="true">03</span>
-              <h3>Site da equipe</h3>
-              <p>Relatório Lighthouse completo.</p><a class="button button-secondary"
-                href="./documentos/darkneves.github.io-20260808T202926.html" target="_blank"
-                rel="noopener noreferrer">Abrir relatório <span class="sr-only">do site da equipe (abre em nova
-                  aba)</span><span aria-hidden="true">↗</span></a>
-            </article>
-          </div>
-          <div class="external-links" id="external-links"></div>
-        </div>
-      </section>
-
-      <section class="section closing" aria-labelledby="encerramento-titulo">
-        <div class="container narrow">
-          <div class="closing-mark" aria-hidden="true">✓</div>
-          <p class="eyebrow">Encerramento</p>
-          <h2 id="encerramento-titulo">Obrigado!</h2>
-          <p>Que cada interface seja um caminho aberto, não uma barreira.</p><a href="#topo">Voltar ao início <span
-              aria-hidden="true">↑</span></a>
         </div>
       </section>
     </div>
+
+    <section class="section section-soft" id="problemas" aria-labelledby="problemas-titulo">
+      <div class="container">
+        <div class="section-heading center reveal"><p class="eyebrow">Síntese da análise</p><h2 id="problemas-titulo">Principais problemas de acessibilidade</h2><p>Os três achados mais relevantes, organizados para comparação durante a apresentação.</p></div>
+        <div class="issue-grid summary-grid">
+          <article class="issue-card summary-card reveal"><span class="issue-number">PROBLEMA 01</span><h3>[Problema de acessibilidade]</h3><dl><div><dt>Aplicativo</dt><dd>[Nome do aplicativo]</dd></div><div><dt>Recomendação</dt><dd>[Recomendação do Scanner]</dd></div></dl></article>
+          <article class="issue-card summary-card reveal"><span class="issue-number">PROBLEMA 02</span><h3>[Problema de acessibilidade]</h3><dl><div><dt>Aplicativo</dt><dd>[Nome do aplicativo]</dd></div><div><dt>Recomendação</dt><dd>[Recomendação do Scanner]</dd></div></dl></article>
+          <article class="issue-card summary-card reveal"><span class="issue-number">PROBLEMA 03</span><h3>[Problema de acessibilidade]</h3><dl><div><dt>Aplicativo</dt><dd>[Nome do aplicativo]</dd></div><div><dt>Recomendação</dt><dd>[Recomendação do Scanner]</dd></div></dl></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section conclusion" id="conclusao" aria-labelledby="conclusao-titulo">
+      <div class="container reveal">
+        <p class="eyebrow">Conclusão</p>
+        <h2 id="conclusao-titulo">Acessibilidade se constrói nos detalhes</h2>
+        <p class="conclusion-lead">A análise demonstrou que pequenos detalhes de interface podem criar barreiras significativas de acessibilidade. Ferramentas como o Scanner de Acessibilidade ajudam a identificar esses problemas e fornecem recomendações que podem tornar os aplicativos mais inclusivos, compreensíveis e fáceis de utilizar.</p>
+        <div class="statement-list"><p>Identificar barreiras é o primeiro passo para criar experiências mais inclusivas.</p><p>Ferramentas automatizadas orientam a análise, mas não substituem testes com pessoas.</p></div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="integrantes" aria-labelledby="integrantes-titulo">
+      <div class="container">
+        <div class="section-heading center reveal"><p class="eyebrow">Equipe</p><h2 id="integrantes-titulo">Integrantes</h2><p>Substitua os campos abaixo pelos nomes e perfis da equipe.</p></div>
+        <div class="team-grid">
+          <article class="member-card reveal"><span class="member-avatar" aria-hidden="true">01</span><h3>[Nome do integrante 1]</h3><a class="member-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">[@githubusername — opcional]</a></article>
+          <article class="member-card reveal"><span class="member-avatar" aria-hidden="true">02</span><h3>[Nome do integrante 2]</h3><a class="member-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">[@githubusername — opcional]</a></article>
+          <article class="member-card reveal"><span class="member-avatar" aria-hidden="true">03</span><h3>[Nome do integrante 3]</h3><a class="member-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">[@githubusername — opcional]</a></article>
+          <article class="member-card reveal"><span class="member-avatar" aria-hidden="true">04</span><h3>[Nome do integrante 4]</h3><a class="member-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">[@githubusername — opcional]</a></article>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-grid">
-      <div>
-        <p><strong>Instituto Federal de Roraima - IFRR</strong></p>
-        <p>Multimídia e Interação Humano-Computador · MOD 4 - Noturno · 2026</p>
-      </div>
-      <p>Israel · Andreia · Kelly</p>
+      <div><p><strong>Análise de Acessibilidade em Aplicativos — 2026</strong></p><p>Desenvolvido para fins acadêmicos.</p></div>
+      <p>Apresentação · <time datetime="2026-08-19">19/08/2026</time></p>
     </div>
   </footer>
 
+  <dialog class="screen-preview-dialog" id="screen-preview-dialog" aria-labelledby="screen-preview-title">
+    <div class="screen-preview-toolbar"><h2 id="screen-preview-title">Visualização em tela cheia</h2><button class="screen-preview-close" type="button" data-preview-close aria-label="Fechar visualização em tela cheia">Fechar</button></div>
+    <img id="screen-preview-image" src="" alt="">
+  </dialog>
   <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
   <button class="back-to-top" type="button" data-back-to-top aria-label="Voltar ao topo da página">↑</button>
 </body>

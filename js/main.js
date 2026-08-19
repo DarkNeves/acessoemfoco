@@ -1,11 +1,7 @@
-import { isAdminRoute, setupAdminAccess } from "./admin-auth.js?v=3";
-import { connectFirebase } from "./firebase-config.js?v=3";
 import { mountHeroVisual } from "./hero-visuals.js";
-import { onLanguageChange, setupI18n, t } from "./i18n.js";
-import { loadLighthouseData, renderExternalLinks } from "./lighthouse.js?v=4";
+import { setupI18n, t } from "./i18n.js";
 import { closeAccessibilitySettings, setupAccessibilitySettings } from "./settings.js";
 import { setupSplashScreen } from "./splash.js?v=6";
-import { setupVoting } from "./voting.js?v=3";
 
 function setupSmoothScrolling() {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -110,6 +106,32 @@ function setupScrollEffects() {
   items.forEach((item) => observer.observe(item));
 }
 
+function setupScreenPreview() {
+  const dialog = document.querySelector("#screen-preview-dialog");
+  const image = document.querySelector("#screen-preview-image");
+  const title = document.querySelector("#screen-preview-title");
+  const closeButton = document.querySelector("[data-preview-close]");
+  if (!dialog || !image || !title || !closeButton) return;
+
+  document.querySelectorAll("[data-preview-src]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const figure = button.closest("figure");
+      const sourceImage = figure?.querySelector("img");
+      const siteName = figure?.querySelector("figcaption > span")?.textContent?.trim() || "";
+      image.src = button.dataset.previewSrc;
+      image.alt = sourceImage?.alt || "";
+      title.textContent = siteName ? `${t("Visualização em tela cheia")}: ${siteName}` : t("Visualização em tela cheia");
+      dialog.showModal();
+      closeButton.focus();
+    });
+  });
+
+  closeButton.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+
 async function initialize() {
   setupSplashScreen();
   mountHeroVisual();
@@ -118,31 +140,7 @@ async function initialize() {
   setupNavigation();
   setupSmoothScrolling();
   setupScrollEffects();
-  renderExternalLinks();
-  onLanguageChange(renderExternalLinks);
-
-  const adminRoute = isAdminRoute();
-  if (adminRoute) {
-    const firebase = await connectFirebase({ includeAuth: true });
-    await setupAdminAccess(firebase, async () => {
-      try {
-        await loadLighthouseData();
-      } catch (error) {
-        console.error(error);
-      }
-      await setupVoting(firebase);
-    });
-    return;
-  }
-
-  try {
-    await loadLighthouseData();
-  } catch (error) {
-    console.error(error);
-  }
-
-  const firebase = await connectFirebase();
-  await setupVoting(firebase);
+  setupScreenPreview();
 }
 
 initialize().catch((error) => console.error(t("Falha ao iniciar a página:"), error));

@@ -1,13 +1,20 @@
 const metrics = `
-  <div class="hero-metric"><span>3</span><small>páginas analisadas</small></div>
-  <div class="hero-metric metric-second"><span>4</span><small>pilares avaliados</small></div>`;
+  <div class="hero-metric"><span>3</span><small>aplicativos analisados</small></div>
+  <div class="hero-metric metric-second"><span>3</span><small>propostas de solução</small></div>`;
 
-// Ilustração original do farol usada no hero.
-export const HeroLighthouse = `
-  <div class="hero-lighthouse-component" data-hero-component="lighthouse">
-    <div class="lighthouse-mark">
+export const HeroMobileScanner = `
+  <div class="hero-mobile-component" data-hero-component="mobile-scanner">
+    <div class="mobile-scan-mark">
       <span class="beam beam-one"></span><span class="beam beam-two"></span>
-      <span class="light"></span><span class="tower"></span><span class="base"></span>
+      <div class="mobile-device">
+        <div class="scan-screen">
+          <span class="interface-line line-wide"></span>
+          <span class="interface-line line-short"></span>
+          <span class="scan-target" aria-hidden="true">✓</span>
+          <span class="interface-line line-bottom"></span>
+          <span class="scan-line"></span>
+        </div>
+      </div>
     </div>
     ${metrics}
   </div>`;
@@ -15,5 +22,5 @@ export const HeroLighthouse = `
 export function mountHeroVisual() {
   const container = document.querySelector("[data-hero-visual]");
   if (!container) return;
-  container.innerHTML = HeroLighthouse;
+  container.innerHTML = HeroMobileScanner;
 }
